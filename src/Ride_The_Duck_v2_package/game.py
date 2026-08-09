@@ -58,13 +58,13 @@ def decode_save(encoded_bytes):
 
 def get_config_dir():
     '''Return platform-appropriate config directory'''
-    return os.path.expanduser("~/.config/BlackDuck-v2")
+    return os.path.expanduser("~/.config/Ride-The-Duck-v2")
 
 def load_game(): # access save file -JSON
     '''loading save file - returns pat game data'''
     global savefile_value
     config_dir = get_config_dir()
-    save_path = os.path.join(config_dir, "BlackDuck-v2.bin")
+    save_path = os.path.join(config_dir, "Ride-The-Duck-v2.bin")
     try:
         with open(save_path, "rb") as f:
             encoded_bytes = f.read()
@@ -97,7 +97,7 @@ def save_game(chip_info = None, stats = None):
     encoded_bytes = encode_save(json_str)
     config_dir = get_config_dir()
     os.makedirs(config_dir, exist_ok=True)
-    save_path = os.path.join(config_dir, "BlackDuck-v2.bin")
+    save_path = os.path.join(config_dir, "Ride-The-Duck-v2.bin")
     with open(save_path, "wb") as f:
         f.write(encoded_bytes)
 
