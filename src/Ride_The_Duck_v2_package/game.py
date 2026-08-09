@@ -237,6 +237,11 @@ class game_variable: # Game variables
 
 GV = game_variable()
 
+class game_objects:
+    def game_space(self):
+        pygame.draw.rect(GV.display, (0, 0, 0), (100, 100, 100, 100))
+
+GO = game_objects()
 
 
 
@@ -259,10 +264,10 @@ class pygame_function:
 
     def on_render(self):
         GV.display.fill(GV.table_colour)
-
+        GO.game_space()
     def on_cleanup(self):
         pygame.quit()
-        
+
     def on_execute(self):
         if self.on_init() == False:
             GV._running = False 
@@ -270,7 +275,6 @@ class pygame_function:
             self.FPS.tick(self.fps)
             for event in pygame.event.get():
                 self.on_event(event)
-            self.on_loop()
             self.on_render()
 
             pygame.display.flip()
