@@ -208,6 +208,9 @@ class game_variable: # Game variables
 
         self.chipFontList = (self.threeCharFont, self.fourCharFont, self.fiveCharFont, self.sixCharFont)
         self.chipFontListSmall = (self.threeCharFontSmall, self.fourCharFontSmall, self.fiveCharFontSmall, self.sixCharFontSmall)
+
+        self.chipExchangePosChords1 = []
+        self.chipExchangePosChords2 = []
         
 
         self.tempcardDeck = []
@@ -238,44 +241,47 @@ class game_variable: # Game variables
 GV = game_variable()
 
 class game_objects:
+    
     def game_space(self):
-        pygame.draw.arc(GV.display, GV.white_colour, (-200, -510, 1600, 700), 0, 360, 3)
-        pygame.draw.arc(GV.display, GV.white_colour, (-200, -450, 1600, 700), 0, 360, 3)
+        pygame.draw.arc(GV.display, GV.white_colour, (-660, -2240, 2520, 2520), 0, 360, 3)
+        pygame.draw.arc(GV.display, GV.white_colour, (-600, -2180, 2400, 2400), 0, 360, 3)
 
         tabelText = GV.tableTextFontFull.render(("RIDE"), True, GV.white_colour)
-        tableTextRotated = pygame.transform.rotate(tabelText, 355.5)
-        tableTextRect = tabelText.get_rect(center=(490, 210))
+        tableTextRotated = pygame.transform.rotate(tabelText, 355)
+        tableTextRect = tabelText.get_rect(center=(490, 240))
         GV.display.blit(tableTextRotated, tableTextRect)
 
         tabelText = GV.tableTextFontFull.render(("THE"), True, GV.white_colour)
         tableTextRotated = pygame.transform.rotate(tabelText, 0)
-        tableTextRect = tabelText.get_rect(center=(600, 218))
+        tableTextRect = tabelText.get_rect(center=(600, 248))
         GV.display.blit(tableTextRotated, tableTextRect)
 
         tabelText = GV.tableTextFontFull.render(("DUCK"), True, GV.white_colour)
         tableTextRotated = pygame.transform.rotate(tabelText, 4.5)
-        tableTextRect = tabelText.get_rect(center=(715, 208))
+        tableTextRect = tabelText.get_rect(center=(715, 238))
         GV.display.blit(tableTextRotated, tableTextRect)
 
         tabelText = GV.tableTextFontFull.render(("2x"), True, GV.white_colour)
-        tableTextRotated = pygame.transform.rotate(tabelText, 338)
+        tableTextRotated = pygame.transform.rotate(tabelText, 335)
         tableTextRect = tabelText.get_rect(center=(90, 134))
         GV.display.blit(tableTextRotated, tableTextRect)
 
         tabelText = GV.tableTextFontFull.render(("3x"), True, GV.white_colour)
-        tableTextRotated = pygame.transform.rotate(tabelText, 347)
-        tableTextRect = tabelText.get_rect(center=(260, 182))
+        tableTextRotated = pygame.transform.rotate(tabelText, 344)
+        tableTextRect = tabelText.get_rect(center=(260, 198))
         GV.display.blit(tableTextRotated, tableTextRect)
 
         tabelText = GV.tableTextFontFull.render(("4x"), True, GV.white_colour)
-        tableTextRotated = pygame.transform.rotate(tabelText, 13)
-        tableTextRect = tabelText.get_rect(center=(925, 182))
+        tableTextRotated = pygame.transform.rotate(tabelText, 15)
+        tableTextRect = tabelText.get_rect(center=(925, 198))
         GV.display.blit(tableTextRotated, tableTextRect)
 
         tabelText = GV.tableTextFontFull.render(("20x"), True, GV.white_colour)
-        tableTextRotated = pygame.transform.rotate(tabelText, 22)
+        tableTextRotated = pygame.transform.rotate(tabelText, 25)
         tableTextRect = tabelText.get_rect(center=(1095, 130))
         GV.display.blit(tableTextRotated, tableTextRect)
+
+
         
 
 
