@@ -211,6 +211,8 @@ class game_variable: # Game variables
 
         self.chipExchangePosChords1 = []
         self.chipExchangePosChords2 = []
+        self.chipExchangePosChordsOutline1 = []
+        self.chipExchangePosChordsOutline2 = []
         
 
         self.tempcardDeck = []
@@ -241,10 +243,38 @@ class game_variable: # Game variables
 GV = game_variable()
 
 class game_objects:
+    def __init__(self):
+
+        GV.chipExchangePosChords2.append((613.1174117891126, 0))
+        GV.chipExchangePosChordsOutline2.append((613.1174117891126, 0))
+        for delta in range(271, 302, 1):
+            GV.chipExchangePosChords2.append(((cosd(delta) * 1210) + 592, 
+                                              -1010 - (sind(delta) * 1210)))
+            GV.chipExchangePosChordsOutline2.append(((cosd(delta) * 1210) + 592, -1010 - (sind(delta) * 1210)))
+        GV.chipExchangePosChords2.append((1200, 0))
+
+
+        GV.chipExchangePosChords1.append((0, 0))
+        for delta in range(240, 270, 1):
+            GV.chipExchangePosChords1.append(((cosd(delta) * 1210) + 608, -1010 - (sind(delta) * 1210)))
+            GV.chipExchangePosChordsOutline1.append(((cosd(delta) * 1210) + 608, -1010 - (sind(delta) * 1210)))
+        GV.chipExchangePosChords1.append((586.882588210887, 0))
+        GV.chipExchangePosChordsOutline1.append((586.882588210887, 0))
+
+
+
     
     def game_space(self):
-        pygame.draw.arc(GV.display, GV.white_colour, (-660, -2240, 2520, 2520), 0, 360, 3)
         pygame.draw.arc(GV.display, GV.white_colour, (-600, -2180, 2400, 2400), 0, 360, 3)
+        pygame.draw.arc(GV.display, GV.white_colour, (-660, -2240, 2520, 2520), 0, 360, 3)
+
+        print(GV.chipExchangePosChords2)
+
+        pygame.draw.polygon(GV.display, GV.table_colour_accent, GV.chipExchangePosChords2)
+        pygame.draw.lines(GV.display, GV.white_colour, False, GV.chipExchangePosChordsOutline2, 5)
+
+        pygame.draw.polygon(GV.display, GV.table_colour_accent, GV.chipExchangePosChords1)
+        pygame.draw.lines(GV.display, GV.white_colour, False, GV.chipExchangePosChordsOutline1, 5)
 
         tabelText = GV.tableTextFontFull.render(("RIDE"), True, GV.white_colour)
         tableTextRotated = pygame.transform.rotate(tabelText, 355)
