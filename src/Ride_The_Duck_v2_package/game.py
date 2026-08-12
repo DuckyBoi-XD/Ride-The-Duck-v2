@@ -306,8 +306,71 @@ class game_objects:
         GV.chipExchangePosChords1.append((586.882588210887, 0))
         GV.chipExchangePosChordsOutline1.append((586.882588210887, 0))
 
+    def on_init(self):
+        self.chipCirclePoints1 = []
+        self.chipCirclePoints2 = []
+        self.chipCirclePoints3 = []
+        self.chipCirclePoints4 = []
+        self.chipCirclePoints5 = []
+        self.chipCirclePoints6 = []
+        self.chipCirclePointsList = (self.chipCirclePoints1, self.chipCirclePoints2, self.chipCirclePoints3, 
+                                     self.chipCirclePoints4, self.chipCirclePoints5, self.chipCirclePoints6)
+        self.chipCirclePointsReverse = []
 
+        self.chipCirclePointsSmall1 = []
+        self.chipCirclePointsSmall2 = []
+        self.chipCirclePointsSmall3 = []
+        self.chipCirclePointsSmall4 = []
+        self.chipCirclePointsSmall5 = []
+        self.chipCirclePointsSmall6 = []
+        self.chipCirclePointsListSmall = (self.chipCirclePoints1, self.chipCirclePoints2, self.chipCirclePoints3, 
+                                     self.chipCirclePoints4, self.chipCirclePoints5, self.chipCirclePoints6)
+        self.chipCirclePointsReverseSmall = []
+    def chip_objects(self):
+        for value in GV.chipDisplayPriority:
+            for listpostions in self.chipCirclePointsList:
+                listpostions.clear()
+            pos = ((GV.chipData[value[0]])[value[1]])["position"]
 
+            # Base chip
+            pygame.draw.circle(GV.display, ((GV.chipData[value[0]])[value[1]])["colour"], pos, GV.chipRadius)
+
+            # Chip Arc Accent Positioning
+            for b, valueb in enumerate(GV.chipArcAngles):
+                self.chipCirclePointsReverse = []
+                for delta in range (valueb-10, valueb+11, 2):
+                    self.chipCirclePointsList[b].append([
+                        (cosd(delta) * (GV.chipRadius)) + (pos)[0], 
+                        (sind(delta) * (GV.chipRadius)) + (pos)[1]
+                    ])
+                    self.chipCirclePointsReverse.append([
+                        (cosd(delta) * (GV.chipRadius - 7)) + (pos)[0], 
+                        (sind(delta) * (GV.chipRadius - 7)) + (pos)[1]
+                    ])
+                self.chipCirclePointsReverse.reverse()
+                for c in self.chipCirclePointsReverse:
+                    self.chipCirclePointsList[b].append(c)
+
+            # Chip Accent Creation
+            for i in self.chipCirclePointsList:
+                if GV.chipValueColours[value[0]] == GV.white_colour:
+                    pygame.draw.polygon(GV.display, GV.blue_colour, i)
+                else:
+                    pygame.draw.polygon(GV.display, GV.white_colour, i)
+
+            # Font Creation
+            chip = GV.chipValues[value[0]]
+            if len(chip) <= 3: # Grabs the font depending on value
+                chipFontFont = GV.chipFontList[0]
+            elif len(chip) >= 4:
+                chipFontFont = GV.chipFontList[len(chip) - 3]
+
+            if GV.chipValueColours[value[0]] == GV.white_colour:
+                chipText = chipFontFont.render(GV.chipValues[value[0]], True, GV.blue_colour)
+            else:
+                chipText = chipFontFont.render(GV.chipValues[value[0]], True, GV.white_colour)
+            chipTextRect = chipText.get_rect(center=(pos))
+            GV.display.blit(chipText, chipTextRect)
     
     def game_space(self):
         pygame.draw.arc(GV.display, GV.white_colour, (-600, -2180, 2400, 2400), 0, 360, 3)
@@ -377,7 +440,9 @@ class pygame_function:
 
     def on_render(self):
         GV.display.fill(GV.table_colour)
+        GO.on_init()
         GO.game_space()
+        GO.chip_objects()
     def on_cleanup(self):
         pygame.quit()
 
