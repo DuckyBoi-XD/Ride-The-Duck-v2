@@ -160,21 +160,23 @@ class game_variable: # Game variables
         self.chipValues = ("1", "5", "10", "25", "100", "500", "1000", "5000", "25000", "100000")
         self.chipValuePositions = ((0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (9, 0))
 
-        chipPositions1 = []
-        chipPositions5 = []
-        chipPositions10 = []
-        chipPositions25 = []
-        chipPositions100 = []
-        chipPositions500 = []
-        chipPositions1000 = []
-        chipPositions5000 = []
-        chipPositions25000 = []
-        chipPositions100000 = []
+        chipData1 = []
+        chipData5 = []
+        chipData10 = []
+        chipData25 = []
+        chipData100 = []
+        chipData500 = []
+        chipData1000 = []
+        chipData5000 = []
+        chipData25000 = []
+        chipData100000 = []
 
-        self.chipPositions = (chipPositions1, chipPositions5, chipPositions10, chipPositions25, chipPositions100, chipPositions500,
-                            chipPositions1000, chipPositions5000, chipPositions25000, chipPositions100000)
+        self.chipData = (chipData1, chipData5, chipData10, chipData25, chipData100, chipData500,
+                            chipData1000, chipData5000, chipData25000, chipData100000)
+        
         self.chipValueColours = (self.white_colour, self.red_colour, self.blue_colour, self.green_colour, self.black_colour, 
                                  self.bright_purple_colour, self.yellow_colour, self.orange_colour, self.dark_blue, self.light_blue)
+        
         self.chipDisplayPriority = []
 
         self.mouseStartPos = None
@@ -214,7 +216,6 @@ class game_variable: # Game variables
         self.chipExchangePosChordsOutline1 = []
         self.chipExchangePosChordsOutline2 = []
         
-
         self.tempcardDeck = []
 
         card_ranks = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
@@ -240,10 +241,54 @@ class game_variable: # Game variables
 
         self.Values = (2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11)
 
+        self.chipStartPositions = {}
+        for index, i in enumerate(self.chipValues): # Starting value of chips
+            startingx = index * 100 + (index+1)*(200/11) + 50
+            self.chipStartPositions[i] = (startingx, 650)
+
+        for index, i in enumerate(CHIPS):
+            if i != 0:
+                self.offset = 5
+                self.offsetreal = 0
+                self.sideOffset = 0
+                for j in range(0, i):
+                    self.sideOffset = int(str(self.offset/350)[0]) * 5
+                    self.offset = self.offset - int(str(self.offset/350)[0]) * 350
+                    self.chipData[index].append({"value": self.chipValues[index],
+                                                 "colour": self.chipValueColours[index],
+                                                 "position": [((self.chipStartPositions)[self.chipValues[index]])[0] - self.sideOffset, ((self.chipStartPositions[self.chipValues[index]])[1] - self.offset)],
+                                                })
+                    self.offset += 10
+                    self.offsetreal += 10
+
+        for indexa, lista in enumerate(self.chipData):
+            for indexb, value in enumerate(lista):
+                self.chipDisplayPriority.append((indexa, indexb))
+
+
 GV = game_variable()
 
 class game_objects:
     def __init__(self):
+        self.chipCirclePoints1 = []
+        self.chipCirclePoints2 = []
+        self.chipCirclePoints3 = []
+        self.chipCirclePoints4 = []
+        self.chipCirclePoints5 = []
+        self.chipCirclePoints6 = []
+        self.chipCirclePointsList = (self.chipCirclePoints1, self.chipCirclePoints2, self.chipCirclePoints3, 
+                                     self.chipCirclePoints4, self.chipCirclePoints5, self.chipCirclePoints6)
+        self.chipCirclePointsReverse = []
+
+        self.chipCirclePointsSmall1 = []
+        self.chipCirclePointsSmall2 = []
+        self.chipCirclePointsSmall3 = []
+        self.chipCirclePointsSmall4 = []
+        self.chipCirclePointsSmall5 = []
+        self.chipCirclePointsSmall6 = []
+        self.chipCirclePointsListSmall = (self.chipCirclePoints1, self.chipCirclePoints2, self.chipCirclePoints3, 
+                                     self.chipCirclePoints4, self.chipCirclePoints5, self.chipCirclePoints6)
+        self.chipCirclePointsReverseSmall = []
 
         GV.chipExchangePosChords2.append((613.1174117891126, 0))
         GV.chipExchangePosChordsOutline2.append((613.1174117891126, 0))
@@ -267,8 +312,6 @@ class game_objects:
     def game_space(self):
         pygame.draw.arc(GV.display, GV.white_colour, (-600, -2180, 2400, 2400), 0, 360, 3)
         pygame.draw.arc(GV.display, GV.white_colour, (-660, -2240, 2520, 2520), 0, 360, 3)
-
-        print(GV.chipExchangePosChords2)
 
         pygame.draw.polygon(GV.display, GV.table_colour_accent, GV.chipExchangePosChords2)
         pygame.draw.lines(GV.display, GV.white_colour, False, GV.chipExchangePosChordsOutline2, 5)
@@ -310,10 +353,6 @@ class game_objects:
         tableTextRotated = pygame.transform.rotate(tabelText, 25)
         tableTextRect = tabelText.get_rect(center=(1095, 130))
         GV.display.blit(tableTextRotated, tableTextRect)
-
-
-        
-
 
 GO = game_objects()
 
