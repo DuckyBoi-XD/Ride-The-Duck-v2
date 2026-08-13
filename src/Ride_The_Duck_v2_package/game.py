@@ -257,6 +257,7 @@ class game_variable: # Game variables
                     self.chipData[index].append({"value": self.chipValues[index],
                                                  "colour": self.chipValueColours[index],
                                                  "position": [((self.chipStartPositions)[self.chipValues[index]])[0] - self.sideOffset, ((self.chipStartPositions[self.chipValues[index]])[1] - self.offset)],
+                                                 "override": False
                                                 })
                     self.offset += 10
                     self.offsetreal += 10
@@ -419,7 +420,125 @@ class game_objects:
 
 GO = game_objects()
 
+class game_functions():
+    def move_chip(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                GV._running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    print("TIGGER")
+                    cursorPosx, cursorPosy = pygame.mouse.get_pos()
+                    for self.index_var in reversed(GV.chipDisplayPriority):
+                        CursorPos_CirclePosx = cursorPosx - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
+                        CursorPos_CirclePosy = cursorPosy - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
 
+                        CursorPos_CirclePos = CursorPos_CirclePosx**2 + CursorPos_CirclePosy**2
+                        '''
+                        if GV.bettingGame:
+                            if CursorPos_CirclePos <= GV.chipRadius**2 and GV.dOutcome:
+                                GV.bettingGame = False
+
+                            elif self.index_var in GV.chipBet2 or self.index_var in GV.chipBet3:
+                                GV.betChipOverride = True
+
+                            elif self.index_var in GV.chipBet1 and GV.splitOverride1:
+                                GV.betChipOverride = True
+
+                            elif self.index_var in GV.chipBet4 and GV.splitOverride2:
+                                GV.betChipOverride = True
+                        '''
+
+                        if CursorPos_CirclePos <= GV.chipRadius**2 and ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] is False:
+                            print("Work")
+                            GV.mouseStartPos = pygame.mouse.get_pos()
+                            GV.mousePosChange = True
+                            GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
+                            GV.chipCurrentPos[1] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
+
+                            GV.chipDisplayPriority.remove(self.index_var)
+                            GV.chipDisplayPriority.append(self.index_var)
+                            print(GV.chipData[0])
+                            break
+                    if GV.mousePosChange == True:
+                        break
+                    CursorPos_CirclePosx = cursorPosx - 305
+                    CursorPos_CirclePosy = cursorPosy - 105
+
+                    CursorPos_CirclePos = CursorPos_CirclePosx**2 + CursorPos_CirclePosy**2
+
+                    '''
+                    if CursorPos_CirclePos <= GV.chipRadius**2 and GV.chipExchangeValue1 == GV.chipExchangeValue2:
+                        
+                        for chips in GV.chipExchange:
+                            CHIPS[chips[0]] -= 1
+                        GV.chipExchange.clear()
+
+                        for index, i in enumerate(GV.chipSmallExchangeListtemp):
+                            CHIPS[index] += i
+
+                        for index, value in enumerate(GV.chipPositions):
+                            GV.chipPositions[index].clear()
+                        for index, i in enumerate(CHIPS):
+                            GV.offset = 5
+                            GV.offsetreal = 0
+                            GV.sideOffset = 0
+                            for GV.chipID in range(0, i):
+                                GV.sideOffset = int(str(GV.offset/350)[0]) * 5
+                                GV.offsetreal = GV.offset - int(str(GV.offset/350)[0]) * 350
+                                GV.chipPositions[index].append([((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offsetreal)])
+                                GV.offset += 10
+
+                        GV.chipExchangeValue1 = 0
+                        
+                        GV.chipSmallExchangeListtemp = list(GV.chipSmallExchangeList)
+                        GV.chipExchangeStr1 = (f"{GV.chipExchangeValue1:,}")
+
+                        if GV.bettingGame:
+                            chipBet1_temp = []
+                            chipBet2_temp = []
+                            chipBet3_temp = []
+                            chipBet4_temp = []
+
+                            for index, value in enumerate(GV.chipBet1):
+                                GV.chipPositions[value[0]].append(GV.gameChipPos1[index])
+                                chipBet1_temp.append((value[0], len(GV.chipPositions[value[0]]) - 1))
+                            for index, value in enumerate(GV.chipBet2):
+                                GV.chipPositions[value[0]].append(GV.gameChipPos2[index])
+                                chipBet2_temp.append((value[0], len(GV.chipPositions[value[0]]) - 1))
+                            for index, value in enumerate(GV.chipBet3):
+                                GV.chipPositions[value[0]].append(GV.gameChipPos3[index])
+                                chipBet3_temp.append((value[0], len(GV.chipPositions[value[0]]) - 1))
+                            for index, value in enumerate(GV.chipBet4):
+                                GV.chipPositions[value[0]].append(GV.gameChipPos4[index])
+                                chipBet4_temp.append((value[0], len(GV.chipPositions[value[0]]) - 1))
+
+                            GV.chipBet1[:] = chipBet1_temp
+                            GV.chipBet2[:] = chipBet2_temp
+                            GV.chipBet3[:] = chipBet3_temp
+                            GV.chipBet4[:] = chipBet4_temp
+                        else:
+                            for index, o in enumerate(GV.chipBet):
+                                GV.chipBet[index].clear()
+
+                        GV.chipDisplayPriority.clear()
+
+                        for indexa, lista in enumerate(GV.chipPositions):
+                            indexb = 0
+                            for indexb, value in enumerate(lista):
+                                GV.chipDisplayPriority.append((indexa, indexb))
+
+                        save_game()
+                        '''
+
+            if event.type == pygame.MOUSEBUTTONUP and GV.mousePosChange == True:
+                GV.mousePosChange = False
+                GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
+                GV.chipCurrentPos[1] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
+        if GV.mousePosChange == True:
+            (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = pygame.mouse.get_pos()[0] - GV.mouseStartPos[0] + GV.chipCurrentPos[0]
+            (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = pygame.mouse.get_pos()[1] - GV.mouseStartPos[1] + GV.chipCurrentPos[1]
+GF = game_functions()
 
 
 class pygame_function:
@@ -434,10 +553,6 @@ class pygame_function:
         pygame.display.set_caption("Ride The Duck v2")
         GV._running = True
 
-    def on_event(self, event):
-        if event.type == pygame.QUIT:
-            GV._running = False
-
     def on_render(self):
         GV.display.fill(GV.table_colour)
         GO.on_init()
@@ -451,8 +566,7 @@ class pygame_function:
             GV._running = False 
         while(GV._running):
             self.FPS.tick(self.fps)
-            for event in pygame.event.get():
-                self.on_event(event)
+            GF.move_chip()
             self.on_render()
 
             pygame.display.flip()
