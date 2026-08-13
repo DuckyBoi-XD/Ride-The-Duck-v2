@@ -215,6 +215,9 @@ class game_variable: # Game variables
         self.chipExchangePosChords2 = []
         self.chipExchangePosChordsOutline1 = []
         self.chipExchangePosChordsOutline2 = []
+
+        self.chipExchange = []
+        self.chipExchangeOn = False
         
         self.tempcardDeck = []
 
@@ -375,7 +378,24 @@ class game_objects:
 
             chipOutlineColour = None
             chipOutlineWidth = None
+
+            chipPositionx = (((GV.chipData[value[0]])[value[1]])["position"])[0]
+            chipPositiony = (((GV.chipData[value[0]])[value[1]])["position"])[1]
+            exchange_remove = True
+
+            for position in GV.chipExchangePosChords2:
+                if 613.1174117891126 <= chipPositionx <= position[0] and 0 <= chipPositiony <= position[1]:
+                    exchange_remove = False
+                    if value not in GV.chipExchange:
+                        GV.chipExchange.append(value)
+                        GV.chipExchangeOn = True
+                    break
+
+            if exchange_remove:
+                if value in GV.chipExchange: 
+                        GV.chipExchange.remove(value)
             if GV.mousePosChange and value == GV.chipDisplayPriority[-1]:
+                # Chip outline
                 '''
                 if value in listy:
                     chipOutlineColour = GV.yellow_green
@@ -387,11 +407,11 @@ class game_objects:
                 else:
                     chipOutlineColour = GV.yellow_colour
                     chipOutlineWidth = 2
-                '''
-                elif value in listy:
-                    chipOutlineColour = GV.bright_green
-                    chipOutlineWidth = 2
-                '''
+
+            elif value in GV.chipExchange:
+                chipOutlineColour = GV.bright_green
+                chipOutlineWidth = 2
+                
             elif GV.chipValueColours[value[0]] == GV.black_colour or GV.chipValueColours[value[0]] == GV.blue_colour:
                 chipOutlineColour = GV.white_colour
                 chipOutlineWidth = 1
