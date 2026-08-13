@@ -372,6 +372,37 @@ class game_objects:
                 chipText = chipFontFont.render(GV.chipValues[value[0]], True, GV.white_colour)
             chipTextRect = chipText.get_rect(center=(pos))
             GV.display.blit(chipText, chipTextRect)
+
+            chipOutlineColour = None
+            chipOutlineWidth = None
+            if GV.mousePosChange and value == GV.chipDisplayPriority[-1]:
+                '''
+                if value in listy:
+                    chipOutlineColour = GV.yellow_green
+                    chipOutlineWidth = 2
+                '''
+                if GV.chipValueColours[value[0]] == GV.yellow_colour:
+                    chipOutlineColour = GV.orange_colour
+                    chipOutlineWidth = 2
+                else:
+                    chipOutlineColour = GV.yellow_colour
+                    chipOutlineWidth = 2
+                '''
+                elif value in listy:
+                    chipOutlineColour = GV.bright_green
+                    chipOutlineWidth = 2
+                '''
+            elif GV.chipValueColours[value[0]] == GV.black_colour or GV.chipValueColours[value[0]] == GV.blue_colour:
+                chipOutlineColour = GV.white_colour
+                chipOutlineWidth = 1
+            else:
+                chipOutlineColour = GV.black_colour
+                chipOutlineWidth = 1
+
+            if chipOutlineWidth == 2:
+                pygame.draw.circle(GV.display, chipOutlineColour, (pos[0], pos[1]), 42, width=3)
+            else:
+                pygame.draw.circle(GV.display, chipOutlineColour, (pos[0], pos[1]), 42, width=2)
     
     def game_space(self):
         pygame.draw.arc(GV.display, GV.white_colour, (-600, -2180, 2400, 2400), 0, 360, 3)
