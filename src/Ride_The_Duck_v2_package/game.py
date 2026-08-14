@@ -502,7 +502,7 @@ class game_objects:
                     listpostions.clear()
 
                 # Circle Positions
-                widthSpacing = (chipIndexSelection[0] * 35) + ((100/10) * (chipIndexSelection[0] + 2)) + 97
+                widthSpacing = (chipIndexSelection[0] * 40) + ((100/10) * (chipIndexSelection[0] + 2)) + 70
                 smallChipPos = (widthSpacing, 20)
 
                 GV.exchangeChipPos.append(smallChipPos)
@@ -581,10 +581,10 @@ class game_objects:
             GV.display.blit(exchangeValueText, exchangeValueTextRect)
 
             if GV.chipExchangeValue1 == GV.chipExchangeValue2:
-                pygame.draw.circle(GV.display, GV.bright_green, (305, 105), 30)
+                pygame.draw.circle(GV.display, GV.bright_green, (280, 105), 30)
             else:
-                pygame.draw.circle(GV.display, GV.red_colour, (305, 105), 30)
-            pygame.draw.circle(GV.display, GV.white_colour, (305, 105), 30, width=2)
+                pygame.draw.circle(GV.display, GV.red_colour, (280, 105), 30)
+            pygame.draw.circle(GV.display, GV.white_colour, (280, 105), 30, width=2)
 
 GO = game_objects()
 
