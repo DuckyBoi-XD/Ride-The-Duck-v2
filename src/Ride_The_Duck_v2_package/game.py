@@ -416,12 +416,10 @@ class game_objects:
 
             if GV.mousePosChange and value == GV.chipDisplayPriority[-1]:
                 # Chip outline
-                '''
-                if value in listy:
+                if value in GV.chipExchange:
                     chipOutlineColour = GV.yellow_green
                     chipOutlineWidth = 2
-                '''
-                if GV.chipValueColours[value[0]] == GV.yellow_colour:
+                elif GV.chipValueColours[value[0]] == GV.yellow_colour:
                     chipOutlineColour = GV.orange_colour
                     chipOutlineWidth = 2
                 else:
