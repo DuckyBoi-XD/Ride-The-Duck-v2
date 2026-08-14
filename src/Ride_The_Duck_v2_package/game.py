@@ -218,6 +218,19 @@ class game_variable: # Game variables
 
         self.chipExchange = []
         self.chipExchangeOn = False
+        self.chipExchangehighlightOn = False
+        self.chipExchangeHighlight = []
+
+        self.chipExchangeValue1 = 0
+        self.chipExchangeValue2 = 0
+        self.chipExchangeStr1 = "0"
+        self.chipExchangeStr2 = "0"
+        self.exchangeChipSelection = 0
+
+        self.chipSmallExchangeList = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        self.chipSmallExchangeListtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+        self.exchangeChipPos = []
         
         self.tempcardDeck = []
 
@@ -394,6 +407,13 @@ class game_objects:
             if exchange_remove:
                 if value in GV.chipExchange: 
                         GV.chipExchange.remove(value)
+                if not GV.chipExchange:
+                    GV.chipExchangeOn = False
+                    GV.chipExchangeValue1 = 0
+                    GV.chipExchangeValue2 = 0
+                    GV.chipSmallExchangeListtemp = list(GV.chipSmallExchangeList)
+                    GV.chipExchangeStr1 = None
+
             if GV.mousePosChange and value == GV.chipDisplayPriority[-1]:
                 # Chip outline
                 '''
@@ -469,6 +489,105 @@ class game_objects:
         tableTextRect = tabelText.get_rect(center=(1095, 130))
         GV.display.blit(tableTextRotated, tableTextRect)
 
+        if GV.chipExchangeOn:
+
+            widthSpacing = 150/11
+            GV.chipExchangeValue2 = 0
+            for item in GV.chipDisplayPriority:
+                if item in GV.chipExchange:
+                    GV.chipExchangeValue2 += int(GV.chipValues[item[0]])
+            GV.chipExchangeStr2 = (f"{GV.chipExchangeValue2:,}")
+
+            GV.exchangeChipPos = []
+            for chipIndexSelection in GV.chipValuePositions:
+                for listpostions in self.chipCirclePointsListSmall:
+                    listpostions.clear()
+
+                # Circle Positions
+                widthSpacing = (chipIndexSelection[0] * 35) + ((100/10) * (chipIndexSelection[0] + 2)) + 97
+                smallChipPos = (widthSpacing, 20)
+
+                GV.exchangeChipPos.append(smallChipPos)
+
+                # Base circle
+                pygame.draw.circle(GV.display, GV.chipValueColours[chipIndexSelection[0]], smallChipPos, GV.smallChipRadius)
+
+                # Chip font
+                chip = GV.chipValues[chipIndexSelection[0]]
+                if len(chip) <= 3:
+                    chipFontSmall = GV.chipFontListSmall[0]
+                elif len(chip) >= 4:
+                    chipFontSmall = GV.chipFontListSmall[len(chip) - 3]
+
+                if GV.chipValueColours[chipIndexSelection[0]] == GV.white_colour:
+                    chipText = chipFontSmall.render(GV.chipValues[chipIndexSelection[0]], True, GV.blue_colour)
+                else:
+                    chipText = chipFontSmall.render(GV.chipValues[chipIndexSelection[0]], True, GV.white_colour)
+                chipTextRect = chipText.get_rect(center=(smallChipPos))
+                GV.display.blit(chipText, chipTextRect)
+
+                # Calculating small chip accent
+                for b, value in enumerate(GV.chipArcAngles):
+                    self.chipCirclePointsReverseSmall = []
+                    for delta in range (value-10, value+11, 2):
+                        self.chipCirclePointsListSmall[b].append([
+                            (cosd(delta) * (GV.smallChipRadius)) + (smallChipPos)[0], 
+                            (sind(delta) * (GV.smallChipRadius)) + (smallChipPos)[1]
+                        ])
+                        self.chipCirclePointsReverseSmall.append([
+                            (cosd(delta) * (GV.smallChipRadius - 4)) + (smallChipPos)[0], 
+                            (sind(delta) * (GV.smallChipRadius - 4)) + (smallChipPos)[1]
+                        ])
+                    self.chipCirclePointsReverseSmall.reverse()
+                    for c in self.chipCirclePointsReverseSmall:
+                        self.chipCirclePointsListSmall[b].append(c)
+
+                # prints accent
+                for i in self.chipCirclePointsList:
+                    if GV.chipValueColours[chipIndexSelection[0]] == GV.white_colour:
+                        pygame.draw.polygon(GV.display, GV.blue_colour, i)
+                    else:
+                        pygame.draw.polygon(GV.display, GV.white_colour, i)
+
+                # sets outline colour
+                if int(GV.chipValues[chipIndexSelection[0]]) > GV.chipExchangeValue2 or int(GV.chipValues[chipIndexSelection[0]]) > GV.chipExchangeValue2-GV.chipExchangeValue1 or int(GV.chipValues[chipIndexSelection[0]]) == int(GV.chipValues[GV.chipExchange[0][0]]):
+                    chipOutlineColour = GV.bright_red
+                elif GV.exchangeChipPos[chipIndexSelection[0]] == GV.chipExchangeHighlight:
+                    chipOutlineColour = GV.bright_green
+                elif GV.chipValueColours[chipIndexSelection[0]] == GV.black_colour or GV.chipValueColours[chipIndexSelection[0]] == GV.blue_colour:
+                    chipOutlineColour = GV.white_colour
+                else:
+                    chipOutlineColour = GV.black_colour
+
+                pygame.draw.circle(GV.display, chipOutlineColour, (smallChipPos[0], smallChipPos[1]), 21, width=1)   
+
+                # Chip ammount indicator
+
+                chipAmmountIndicator = GV.exchangeChipAmmount.render(str(GV.chipSmallExchangeListtemp[chipIndexSelection[0]]), True, GV.white_colour)
+                CAIrect = chipAmmountIndicator.get_rect(center=(smallChipPos[0], 50))
+                GV.display.blit(chipAmmountIndicator, CAIrect)
+
+            # Exchange values box
+            pygame.draw.rect(GV.display, GV.table_colour, (350, 65, 180, 40))
+            pygame.draw.rect(GV.display, GV.white_colour, (350, 65, 180, 40), width=2)
+
+            pygame.draw.rect(GV.display, GV.table_colour, (350, 115, 180, 40))
+            pygame.draw.rect(GV.display, GV.white_colour, (350, 115, 180, 40), width=2)
+
+            exchangeValueText = GV.exchangeFontFull.render(GV.chipExchangeStr2, True, GV.white_colour)
+            exchangeValueTextRect = exchangeValueText.get_rect(center=(440, 135))
+            GV.display.blit(exchangeValueText, exchangeValueTextRect)
+
+            exchangeValueText = GV.exchangeFontFull.render(GV.chipExchangeStr1, True, GV.white_colour)
+            exchangeValueTextRect = exchangeValueText.get_rect(center=(440, 85))
+            GV.display.blit(exchangeValueText, exchangeValueTextRect)
+
+            if GV.chipExchangeValue1 == GV.chipExchangeValue2:
+                pygame.draw.circle(GV.display, GV.bright_green, (305, 105), 30)
+            else:
+                pygame.draw.circle(GV.display, GV.red_colour, (305, 105), 30)
+            pygame.draw.circle(GV.display, GV.white_colour, (305, 105), 30, width=2)
+
 GO = game_objects()
 
 class game_functions():
@@ -477,8 +596,32 @@ class game_functions():
             if event.type == pygame.QUIT:
                 GV._running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if int(list(reversed(GV.chipValues))[GV.exchangeChipSelection]) < GV.chipExchangeValue2 or (int(list(reversed(GV.chipValues))[GV.exchangeChipSelection]) == GV.chipExchangeValue2 and len(GV.chipExchange)!= 1):
+                    if int(list(reversed(GV.chipValues))[GV.exchangeChipSelection]) <= GV.chipExchangeValue2-GV.chipExchangeValue1:
+                        if event.button == 1:
+                            if GV.chipExchangehighlightOn:
+                                GV.chipSmallExchangeListtemp.reverse()
+                                GV.chipSmallExchangeListtemp[GV.exchangeChipSelection] += 1
+                                GV.chipSmallExchangeListtemp.reverse()
+                                GV.chipExchangeValue1 = 0
+
+                                for indexexclist, value in enumerate(reversed(GV.chipSmallExchangeListtemp)):
+                                    if value > 0:
+                                        GV.chipExchangeValue1 += value * int(list(reversed(GV.chipValues))[indexexclist])
+                                GV.chipExchangeStr1 = (f"{GV.chipExchangeValue1:,}")
+                if event.button == 3:
+                    if GV.chipExchangehighlightOn:
+                        GV.chipSmallExchangeListtemp.reverse()
+                        if GV.chipSmallExchangeListtemp[GV.exchangeChipSelection] > 0:
+                            GV.chipSmallExchangeListtemp[GV.exchangeChipSelection] -= 1
+                            GV.chipExchangeValue1 = 0
+
+                            for indexexclist, value in enumerate(GV.chipSmallExchangeListtemp):
+                                if value > 0:
+                                    GV.chipExchangeValue1 += value * int(list(reversed(GV.chipValues))[indexexclist])
+                            GV.chipExchangeStr1 = (f"{GV.chipExchangeValue1:,}")
+                        GV.chipSmallExchangeListtemp.reverse()
                 if event.button == 1:
-                    print("TIGGER")
                     cursorPosx, cursorPosy = pygame.mouse.get_pos()
                     for self.index_var in reversed(GV.chipDisplayPriority):
                         CursorPos_CirclePosx = cursorPosx - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
@@ -501,7 +644,6 @@ class game_functions():
                         '''
 
                         if CursorPos_CirclePos <= GV.chipRadius**2 and ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] is False:
-                            print("Work")
                             GV.mouseStartPos = pygame.mouse.get_pos()
                             GV.mousePosChange = True
                             GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
@@ -509,7 +651,6 @@ class game_functions():
 
                             GV.chipDisplayPriority.remove(self.index_var)
                             GV.chipDisplayPriority.append(self.index_var)
-                            print(GV.chipData[0])
                             break
                     if GV.mousePosChange == True:
                         break
@@ -580,12 +721,30 @@ class game_functions():
                                 GV.chipDisplayPriority.append((indexa, indexb))
 
                         save_game()
+
                         '''
 
             if event.type == pygame.MOUSEBUTTONUP and GV.mousePosChange == True:
                 GV.mousePosChange = False
                 GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
                 GV.chipCurrentPos[1] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
+
+            for indexexchange, self.smallExchangeChipPos in enumerate(reversed(GV.exchangeChipPos)):
+
+                cursorPosx, cursorPosy = pygame.mouse.get_pos()
+
+                CursorPos_CirclePosx = cursorPosx - self.smallExchangeChipPos[0]
+                CursorPos_CirclePosy = cursorPosy - self.smallExchangeChipPos[1]
+
+                CursorPos_CirclePos = CursorPos_CirclePosx**2 + CursorPos_CirclePosy**2
+                if CursorPos_CirclePos <= GV.smallChipRadius**2:
+                    GV.chipExchangeHighlight = self.smallExchangeChipPos 
+                    GV.chipExchangehighlightOn = True
+                    GV.exchangeChipSelection = indexexchange
+                    break
+                else:
+                    GV.chipExchangeHighlight = None
+                    GV.chipExchangehighlightOn = False
         if GV.mousePosChange == True:
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = pygame.mouse.get_pos()[0] - GV.mouseStartPos[0] + GV.chipCurrentPos[0]
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = pygame.mouse.get_pos()[1] - GV.mouseStartPos[1] + GV.chipCurrentPos[1]
