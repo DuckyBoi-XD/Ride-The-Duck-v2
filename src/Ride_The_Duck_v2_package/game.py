@@ -397,7 +397,7 @@ class game_objects:
             exchange_remove = True
 
             for position in GV.chipExchangePosChords2:
-                if 613.1174117891126 <= chipPositionx <= position[0] and 0 <= chipPositiony <= position[1]:
+                if 613.1174117891126 <= chipPositionx <= position[0] and -100 <= chipPositiony <= position[1]:
                     exchange_remove = False
                     if value not in GV.chipExchange:
                         GV.chipExchange.append(value)
