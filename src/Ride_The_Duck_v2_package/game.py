@@ -197,9 +197,9 @@ class game_variable: # Game variables
         self.exchangeFontFull = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 30)
 
         self.exchangeChipAmmount = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 20)
-        self.betFunctionBetFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 30)
-        self.betFunctionStandFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 20)
-        self.betFunctionDoubleDownFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 15)
+        self.betFunctionBetFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 50)
+        self.betFunctionColourFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 30)
+        self.betFunctionInOutFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 25)
         self.betFunctionSplitFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 25)
 
         self.tableTextFontFull = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 40)
@@ -231,9 +231,14 @@ class game_variable: # Game variables
         self.chipSmallExchangeListtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         self.exchangeChipPos = []
-        
         self.tempcardDeck = []
 
+        self.round = 0 # 0: none, 1: br, 2: hl, 3: io:, 4: suit
+
+        self.spadesImage = asset_path(f"suits/spades.png")
+        self.heartsImage = asset_path(f"suits/hearts.png")
+        self.clubsImage = asset_path(f"suits/clubs.png")
+        self.diamondsImage = asset_path(f"suits/diamonds.png")
         card_ranks = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
         self.spadesCards = tuple(asset_path(f"Carddeck/Spades/{rank}.png") for rank in card_ranks)
         self.heartsCards = tuple(asset_path(f"Carddeck/Hearts/{rank}.png") for rank in card_ranks)
@@ -488,7 +493,6 @@ class game_objects:
         GV.display.blit(tableTextRotated, tableTextRect)
 
         if GV.chipExchangeOn:
-
             widthSpacing = 150/11
             GV.chipExchangeValue2 = 0
             for item in GV.chipDisplayPriority:
@@ -585,6 +589,83 @@ class game_objects:
             else:
                 pygame.draw.circle(GV.display, GV.red_colour, (280, 105), 30)
             pygame.draw.circle(GV.display, GV.white_colour, (280, 105), 30, width=2)
+
+        GV.round = 4
+        if GV.round == 0:
+            pygame.draw.rect(GV.display, GV.table_colour_accent, (303, 350, 75, 150))
+            pygame.draw.rect(GV.display, GV.table_colour_accent, (822, 350, 75, 150))
+            buttontext1 = GV.betFunctionBetFont.render(f"BET", True, GV.white_colour)
+            buttontext2 = GV.betFunctionBetFont.render(f"BET", True, GV.white_colour)
+            buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
+            buttontext2_rotated = pygame.transform.rotate(buttontext2, 270)
+            buttontext1rect1 = buttontext1_rotated.get_rect(center=(340, 425))
+            buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
+            GV.display.blit(buttontext1_rotated, buttontext1rect1)
+            GV.display.blit(buttontext2_rotated, buttontext2rect2)
+        elif GV.round == 1:
+            pygame.draw.rect(GV.display, GV.black_colour, (303, 350, 75, 150))
+            pygame.draw.rect(GV.display, GV.red_colour, (822, 350, 75, 150))
+            buttontext1 = GV.betFunctionColourFont.render(f"BLACK", True, GV.white_colour)
+            buttontext2 = GV.betFunctionColourFont.render(f"RED", True, GV.white_colour)
+            buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
+            buttontext2_rotated = pygame.transform.rotate(buttontext2, 270)
+            buttontext1rect1 = buttontext1_rotated.get_rect(center=(340, 425))
+            buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
+            GV.display.blit(buttontext1_rotated, buttontext1rect1)
+            GV.display.blit(buttontext2_rotated, buttontext2rect2)
+        elif GV.round == 2:
+            pygame.draw.rect(GV.display, GV.black_colour, (303, 350, 75, 150))
+            pygame.draw.rect(GV.display, GV.red_colour, (822, 350, 75, 150))
+            buttontext1 = GV.betFunctionColourFont.render(f"ABOVE", True, GV.white_colour)
+            buttontext2 = GV.betFunctionColourFont.render(f"BELOW", True, GV.white_colour)
+            buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
+            buttontext2_rotated = pygame.transform.rotate(buttontext2, 270)
+            buttontext1rect1 = buttontext1_rotated.get_rect(center=(340, 425))
+            buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
+            GV.display.blit(buttontext1_rotated, buttontext1rect1)
+            GV.display.blit(buttontext2_rotated, buttontext2rect2)
+        elif GV.round == 3:
+            pygame.draw.rect(GV.display, GV.black_colour, (303, 350, 75, 150))
+            pygame.draw.rect(GV.display, GV.red_colour, (822, 350, 75, 150))
+            buttontext1 = GV.betFunctionInOutFont.render(f"INSIDE", True, GV.white_colour)
+            buttontext2 = GV.betFunctionInOutFont.render(f"OUTSIDE", True, GV.white_colour)
+            buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
+            buttontext2_rotated = pygame.transform.rotate(buttontext2, 270)
+            buttontext1rect1 = buttontext1_rotated.get_rect(center=(340, 425))
+            buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
+            GV.display.blit(buttontext1_rotated, buttontext1rect1)
+            GV.display.blit(buttontext2_rotated, buttontext2rect2)
+        elif GV.round == 4:
+            pygame.draw.rect(GV.display, GV.table_colour_accent, (303, 350, 75, 75))
+            pygame.draw.rect(GV.display, GV.table_colour_accent, (303, 425, 75, 75))
+
+            pygame.draw.line(GV.display, GV.white_colour, (303, 425), (375, 425), 3)
+
+            pygame.draw.rect(GV.display, GV.table_colour_accent, (822, 350, 75, 75))
+            pygame.draw.rect(GV.display, GV.table_colour_accent, (822, 425, 75, 75))
+
+            pygame.draw.line(GV.display, GV.white_colour, (822, 425), (894, 425), 3)
+
+
+            spadesuit = pygame.transform.smoothscale(pygame.image.load((GV.spadesImage)), (75, 75)).convert_alpha()
+            rect = spadesuit.get_rect(center=(340.5, 387.5))
+            GV.display.blit(spadesuit, rect)
+
+            heartsuit = pygame.transform.smoothscale(pygame.image.load((GV.heartsImage)), (75, 75)).convert_alpha()
+            rect = heartsuit.get_rect(center=(340.5, 462.5))
+            GV.display.blit(heartsuit, rect)
+
+            diamondsuit = pygame.transform.smoothscale(pygame.image.load((GV.diamondsImage)), (75, 75)).convert_alpha()
+            rect = diamondsuit.get_rect(center=(859.5, 387.5))
+            GV.display.blit(diamondsuit, rect)
+
+            clubsuit = pygame.transform.smoothscale(pygame.image.load((GV.clubsImage)), (75, 75)).convert_alpha()
+            rect = clubsuit.get_rect(center=(858, 462.5))
+            GV.display.blit(clubsuit, rect)
+
+        pygame.draw.rect(GV.display, (255, 255, 255), (303, 350, 75, 150), 3)
+        pygame.draw.rect(GV.display, (255, 255, 255), (822, 350, 75, 150), 3)
+        pygame.draw.rect(GV.display, GV.highlight_yellow, (375, 350, 450, 150), 3)
 
 GO = game_objects()
 
@@ -751,6 +832,10 @@ class game_functions():
         if GV.mousePosChange == True:
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = pygame.mouse.get_pos()[0] - GV.mouseStartPos[0] + GV.chipCurrentPos[0]
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = pygame.mouse.get_pos()[1] - GV.mouseStartPos[1] + GV.chipCurrentPos[1]
+
+    def ride_the_duck_function(self):
+        pass
+
 GF = game_functions()
 
 
