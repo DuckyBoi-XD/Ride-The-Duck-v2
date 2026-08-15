@@ -234,6 +234,7 @@ class game_variable: # Game variables
         self.tempcardDeck = []
 
         self.round = 0 # 0: none, 1: br, 2: hl, 3: io:, 4: suit
+        self.chipBet = []
 
         self.spadesImage = asset_path(f"suits/spades.png")
         self.heartsImage = asset_path(f"suits/hearts.png")
@@ -278,7 +279,7 @@ class game_variable: # Game variables
                     self.chipData[index].append({"value": self.chipValues[index],
                                                  "colour": self.chipValueColours[index],
                                                  "position": [((self.chipStartPositions)[self.chipValues[index]])[0] - self.sideOffset, ((self.chipStartPositions[self.chipValues[index]])[1] - self.offset)],
-                                                 "override": False
+                                                 "override": False,
                                                 })
                     self.offset += 10
                     self.offsetreal += 10
@@ -421,7 +422,7 @@ class game_objects:
 
             if GV.mousePosChange and value == GV.chipDisplayPriority[-1]:
                 # Chip outline
-                if value in GV.chipExchange:
+                if value in GV.chipExchange or value in GV.chipBet:
                     chipOutlineColour = GV.yellow_green
                     chipOutlineWidth = 2
                 elif GV.chipValueColours[value[0]] == GV.yellow_colour:
@@ -431,7 +432,7 @@ class game_objects:
                     chipOutlineColour = GV.yellow_colour
                     chipOutlineWidth = 2
 
-            elif value in GV.chipExchange:
+            elif value in GV.chipExchange or value in GV.chipBet:
                 chipOutlineColour = GV.bright_green
                 chipOutlineWidth = 2
                 
@@ -590,7 +591,7 @@ class game_objects:
                 pygame.draw.circle(GV.display, GV.red_colour, (280, 105), 30)
             pygame.draw.circle(GV.display, GV.white_colour, (280, 105), 30, width=2)
 
-        GV.round = 4
+        GV.round = 0
         if GV.round == 0:
             pygame.draw.rect(GV.display, GV.table_colour_accent, (303, 350, 75, 150))
             pygame.draw.rect(GV.display, GV.table_colour_accent, (822, 350, 75, 150))
@@ -832,6 +833,17 @@ class game_functions():
         if GV.mousePosChange == True:
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = pygame.mouse.get_pos()[0] - GV.mouseStartPos[0] + GV.chipCurrentPos[0]
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = pygame.mouse.get_pos()[1] - GV.mouseStartPos[1] + GV.chipCurrentPos[1]
+    def betting_areas(self):
+        for chip_index in reversed(GV.chipDisplayPriority):
+            chipPositionx = ((GV.chipData[chip_index[0]])[chip_index[1]])["position"][0]
+            chipPositiony = ((GV.chipData[chip_index[0]])[chip_index[1]])["position"][1]
+
+            if 375 <= chipPositionx <= 825 and 350 <= chipPositiony <= 500:
+                if chip_index not in GV.chipBet:
+                    GV.chipBet.append(chip_index)
+            else:
+                if chip_index in GV.chipBet:
+                    GV.chipBet.remove(chip_index)
 
     def ride_the_duck_function(self):
         pass
@@ -865,8 +877,9 @@ class pygame_function:
         while(GV._running):
             self.FPS.tick(self.fps)
             GF.player_function()
+            GF.betting_areas()
             self.on_render()
-
+            print(GV.chipBet)
             pygame.display.flip()
         self.on_cleanup()
 
