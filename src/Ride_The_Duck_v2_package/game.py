@@ -267,7 +267,7 @@ class game_variable: # Game variables
                 self.offset = 5
                 self.offsetreal = 0
                 self.sideOffset = 0
-                for j in range(0, i):
+                for _ in range(0, i):
                     self.sideOffset = int(str(self.offset/350)[0]) * 5
                     self.offset = self.offset - int(str(self.offset/350)[0]) * 350
                     self.chipData[index].append({"value": self.chipValues[index],
@@ -674,7 +674,7 @@ class game_functions():
                                 GV.offset = 5
                                 GV.offsetreal = 0
                                 GV.sideOffset = 0
-                                for j in range(0, i):
+                                for _ in range(0, i):
                                     GV.sideOffset = int(str(GV.offset/350)[0]) * 5
                                     GV.offset = GV.offset - int(str(GV.offset/350)[0]) * 350
                                     GV.chipData[index].append({"value": GV.chipValues[index],
@@ -715,7 +715,7 @@ class game_functions():
                             GV.chipBet3[:] = chipBet3_temp
                             GV.chipBet4[:] = chipBet4_temp
                         else:
-                            for index, o in enumerate(GV.chipBet):
+                            for index, _ in enumerate(GV.chipBet):
                                 GV.chipBet[index].clear()
                         '''
 
