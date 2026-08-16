@@ -116,6 +116,7 @@ class game_variable: # Game variables
         self.display = pygame.display.set_mode((self.displayWidth, self.displayHeight), pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.table_colour = (20, 86, 62)
         self.table_colour_accent = (37, 64, 64)
+        self.dark_table_colour_accent = (15, 35, 35)
         global CHIPS, STATS
 
         self.white_colour = (255, 255, 255)
@@ -134,21 +135,8 @@ class game_variable: # Game variables
         self.highlight_yellow = (249, 203, 26)
         self.bright_blue = (14, 142, 255)
         self.bright_orange = (255, 127, 14)
-
-        self.darkgreen_colour = (18, 78, 49)
-        self.darkred_colour = (115, 20, 28)
-        self.darkblue_colour = (13, 23, 67)
-        self.darkorange_colour = (239, 142, 0)
-
-        self.button_blue = (34, 87, 122)
-        self.button_blue2 = (56, 163, 165)
-        self.button_green = (87, 204, 153)
-        self.button_green2 = (128, 237, 153)
-
-        self.button_blue_dark = (17, 43, 61)
-        self.button_blue2_dark = (28, 81, 82)
-        self.button_green_dark = (34, 112, 78)
-        self.button_green2_dark = (23, 160, 54)
+        self.semi_black_colour = (60, 60, 60)
+        self.semi_red_colour = (215, 49, 64)
 
         self._running = True
 
@@ -235,6 +223,7 @@ class game_variable: # Game variables
 
         self.round = 0 # 0: none, 1: br, 2: hl, 3: io:, 4: suit
         self.chipBet = []
+        self.hoverButtonSquare = [False, False, False, False]
 
         self.spadesImage = asset_path(f"suits/spades.png")
         self.heartsImage = asset_path(f"suits/hearts.png")
@@ -591,10 +580,20 @@ class game_objects:
                 pygame.draw.circle(GV.display, GV.red_colour, (280, 105), 30)
             pygame.draw.circle(GV.display, GV.white_colour, (280, 105), 30, width=2)
 
-        GV.round = 0
+        GV.round = 4
         if GV.round == 0:
-            pygame.draw.rect(GV.display, GV.table_colour_accent, (303, 350, 75, 150))
-            pygame.draw.rect(GV.display, GV.table_colour_accent, (822, 350, 75, 150))
+            if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
+                box_colour1 = GV.dark_table_colour_accent
+            else:
+                box_colour1 = GV.table_colour_accent
+
+            if GV.hoverButtonSquare[2] or GV.hoverButtonSquare[3]:
+                box_colour2 = GV.dark_table_colour_accent
+            else:
+                box_colour2 = GV.table_colour_accent
+
+            pygame.draw.rect(GV.display, box_colour1, (303, 350, 75, 150))
+            pygame.draw.rect(GV.display, box_colour2, (822, 350, 75, 150))
             buttontext1 = GV.betFunctionBetFont.render(f"BET", True, GV.white_colour)
             buttontext2 = GV.betFunctionBetFont.render(f"BET", True, GV.white_colour)
             buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
@@ -604,8 +603,18 @@ class game_objects:
             GV.display.blit(buttontext1_rotated, buttontext1rect1)
             GV.display.blit(buttontext2_rotated, buttontext2rect2)
         elif GV.round == 1:
-            pygame.draw.rect(GV.display, GV.black_colour, (303, 350, 75, 150))
-            pygame.draw.rect(GV.display, GV.red_colour, (822, 350, 75, 150))
+            if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
+                box_colour1 = GV.semi_black_colour
+            else:
+                box_colour1 = GV.black_colour
+
+            if GV.hoverButtonSquare[2] or GV.hoverButtonSquare[3]:
+                box_colour2 = GV.semi_red_colour
+            else:
+                box_colour2 = GV.red_colour
+
+            pygame.draw.rect(GV.display, box_colour1, (303, 350, 75, 150))
+            pygame.draw.rect(GV.display, box_colour2, (822, 350, 75, 150))
             buttontext1 = GV.betFunctionColourFont.render(f"BLACK", True, GV.white_colour)
             buttontext2 = GV.betFunctionColourFont.render(f"RED", True, GV.white_colour)
             buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
@@ -615,8 +624,18 @@ class game_objects:
             GV.display.blit(buttontext1_rotated, buttontext1rect1)
             GV.display.blit(buttontext2_rotated, buttontext2rect2)
         elif GV.round == 2:
-            pygame.draw.rect(GV.display, GV.black_colour, (303, 350, 75, 150))
-            pygame.draw.rect(GV.display, GV.red_colour, (822, 350, 75, 150))
+            if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
+                box_colour1 = GV.semi_black_colour
+            else:
+                box_colour1 = GV.black_colour
+
+            if GV.hoverButtonSquare[2] or GV.hoverButtonSquare[3]:
+                box_colour2 = GV.semi_red_colour
+            else:
+                box_colour2 = GV.red_colour
+
+            pygame.draw.rect(GV.display, box_colour1, (303, 350, 75, 150))
+            pygame.draw.rect(GV.display, box_colour2, (822, 350, 75, 150))
             buttontext1 = GV.betFunctionColourFont.render(f"ABOVE", True, GV.white_colour)
             buttontext2 = GV.betFunctionColourFont.render(f"BELOW", True, GV.white_colour)
             buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
@@ -626,8 +645,18 @@ class game_objects:
             GV.display.blit(buttontext1_rotated, buttontext1rect1)
             GV.display.blit(buttontext2_rotated, buttontext2rect2)
         elif GV.round == 3:
-            pygame.draw.rect(GV.display, GV.black_colour, (303, 350, 75, 150))
-            pygame.draw.rect(GV.display, GV.red_colour, (822, 350, 75, 150))
+            if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
+                box_colour1 = GV.semi_black_colour
+            else:
+                box_colour1 = GV.black_colour
+
+            if GV.hoverButtonSquare[2] or GV.hoverButtonSquare[3]:
+                box_colour2 = GV.semi_red_colour
+            else:
+                box_colour2 = GV.red_colour
+
+            pygame.draw.rect(GV.display, box_colour1, (303, 350, 75, 150))
+            pygame.draw.rect(GV.display, box_colour2, (822, 350, 75, 150))
             buttontext1 = GV.betFunctionInOutFont.render(f"INSIDE", True, GV.white_colour)
             buttontext2 = GV.betFunctionInOutFont.render(f"OUTSIDE", True, GV.white_colour)
             buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
@@ -637,13 +666,33 @@ class game_objects:
             GV.display.blit(buttontext1_rotated, buttontext1rect1)
             GV.display.blit(buttontext2_rotated, buttontext2rect2)
         elif GV.round == 4:
-            pygame.draw.rect(GV.display, GV.table_colour_accent, (303, 350, 75, 75))
-            pygame.draw.rect(GV.display, GV.table_colour_accent, (303, 425, 75, 75))
+            if GV.hoverButtonSquare[0]:
+                box_colour1 = GV.semi_red_colour
+            else:
+                box_colour1 = GV.red_colour
+
+            if GV.hoverButtonSquare[1]:
+                box_colour2 = GV.semi_black_colour
+            else:
+                box_colour2 = GV.black_colour
+
+            if GV.hoverButtonSquare[2]:
+                box_colour3 = GV.semi_black_colour
+            else:
+                box_colour3 = GV.black_colour
+
+            if GV.hoverButtonSquare[3]:
+                box_colour4 = GV.semi_red_colour
+            else:
+                box_colour4 = GV.red_colour
+
+            pygame.draw.rect(GV.display, box_colour1, (303, 350, 75, 75))
+            pygame.draw.rect(GV.display, box_colour2, (303, 425, 75, 75))
 
             pygame.draw.line(GV.display, GV.white_colour, (303, 425), (375, 425), 3)
 
-            pygame.draw.rect(GV.display, GV.table_colour_accent, (822, 350, 75, 75))
-            pygame.draw.rect(GV.display, GV.table_colour_accent, (822, 425, 75, 75))
+            pygame.draw.rect(GV.display, box_colour3, (822, 350, 75, 75))
+            pygame.draw.rect(GV.display, box_colour4, (822, 425, 75, 75))
 
             pygame.draw.line(GV.display, GV.white_colour, (822, 425), (894, 425), 3)
 
@@ -833,6 +882,18 @@ class game_functions():
         if GV.mousePosChange == True:
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = pygame.mouse.get_pos()[0] - GV.mouseStartPos[0] + GV.chipCurrentPos[0]
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = pygame.mouse.get_pos()[1] - GV.mouseStartPos[1] + GV.chipCurrentPos[1]
+        cursorPosx, cursorPosy = pygame.mouse.get_pos()
+
+        if 303 <= cursorPosx <= 372 and 350 <= cursorPosy <= 425:
+            GV.hoverButtonSquare = [True, False, False, False]
+        elif 303 <= cursorPosx <= 372 and 425 <= cursorPosy <= 500:
+            GV.hoverButtonSquare = [False, True, False, False]
+        elif 822 <= cursorPosx <= 897 and 350 <= cursorPosy <= 425:
+            GV.hoverButtonSquare = [False, False, True, False]
+        elif 822 <= cursorPosx <= 897 and 425 <= cursorPosy <= 500:
+            GV.hoverButtonSquare = [False, False, False, True]
+        else:
+            GV.hoverButtonSquare = [False, False, False, False]
     def betting_areas(self):
         for chip_index in reversed(GV.chipDisplayPriority):
             chipPositionx = ((GV.chipData[chip_index[0]])[chip_index[1]])["position"][0]
@@ -879,7 +940,6 @@ class pygame_function:
             GF.player_function()
             GF.betting_areas()
             self.on_render()
-            print(GV.chipBet)
             pygame.display.flip()
         self.on_cleanup()
 
