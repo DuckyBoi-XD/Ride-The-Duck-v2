@@ -137,6 +137,7 @@ class game_variable: # Game variables
         self.bright_orange = (255, 127, 14)
         self.semi_black_colour = (60, 60, 60)
         self.semi_red_colour = (215, 49, 64)
+        self.semi_bright_green = (30, 180, 30)
 
         self._running = True
 
@@ -224,6 +225,7 @@ class game_variable: # Game variables
         self.round = 0 # 0: none, 1: br, 2: hl, 3: io:, 4: suit
         self.chipBet = []
         self.hoverButtonSquare = [False, False, False, False]
+        self.hoverButtonCashOut = False
 
         self.spadesImage = asset_path(f"suits/spades.png")
         self.heartsImage = asset_path(f"suits/hearts.png")
@@ -580,7 +582,7 @@ class game_objects:
                 pygame.draw.circle(GV.display, GV.red_colour, (280, 105), 30)
             pygame.draw.circle(GV.display, GV.white_colour, (280, 105), 30, width=2)
 
-        GV.round = 4
+        GV.round = 0
         if GV.round == 0:
             if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
                 box_colour1 = GV.dark_table_colour_accent
@@ -712,9 +714,21 @@ class game_objects:
             clubsuit = pygame.transform.smoothscale(pygame.image.load((GV.clubsImage)), (75, 75)).convert_alpha()
             rect = clubsuit.get_rect(center=(858, 462.5))
             GV.display.blit(clubsuit, rect)
+        if GV.round != 0:
+            if GV.hoverButtonCashOut:
+                box_colour = GV.bright_green
+            else:
+                box_colour = GV.semi_bright_green
+            pygame.draw.rect(GV.display, box_colour, (500, 497, 200, 50))
+            buttontext1 = GV.betFunctionInOutFont.render(f"CASH OUT", True, GV.white_colour)
+            buttontextrect1 = buttontext1.get_rect(center=(600, 522))
+            GV.display.blit(buttontext1, buttontextrect1)
+        else:
+            pygame.draw.rect(GV.display, GV.table_colour_accent, (500, 497, 200, 50))
 
         pygame.draw.rect(GV.display, (255, 255, 255), (303, 350, 75, 150), 3)
         pygame.draw.rect(GV.display, (255, 255, 255), (822, 350, 75, 150), 3)
+        pygame.draw.rect(GV.display, GV.highlight_yellow, (500, 497, 200, 50), 3)
         pygame.draw.rect(GV.display, GV.highlight_yellow, (375, 350, 450, 150), 3)
 
 GO = game_objects()
@@ -880,20 +894,26 @@ class game_functions():
                     GV.chipExchangeHighlight = None
                     GV.chipExchangehighlightOn = False
         if GV.mousePosChange == True:
+            GV.hoverButtonSquare = [False, False, False, False]
+            GV.hoverButtonCashOut = False
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = pygame.mouse.get_pos()[0] - GV.mouseStartPos[0] + GV.chipCurrentPos[0]
             (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = pygame.mouse.get_pos()[1] - GV.mouseStartPos[1] + GV.chipCurrentPos[1]
-        cursorPosx, cursorPosy = pygame.mouse.get_pos()
-
-        if 303 <= cursorPosx <= 372 and 350 <= cursorPosy <= 425:
-            GV.hoverButtonSquare = [True, False, False, False]
-        elif 303 <= cursorPosx <= 372 and 425 <= cursorPosy <= 500:
-            GV.hoverButtonSquare = [False, True, False, False]
-        elif 822 <= cursorPosx <= 897 and 350 <= cursorPosy <= 425:
-            GV.hoverButtonSquare = [False, False, True, False]
-        elif 822 <= cursorPosx <= 897 and 425 <= cursorPosy <= 500:
-            GV.hoverButtonSquare = [False, False, False, True]
         else:
+            cursorPosx, cursorPosy = pygame.mouse.get_pos()
+            GV.hoverButtonCashOut = False
             GV.hoverButtonSquare = [False, False, False, False]
+
+            if 303 <= cursorPosx <= 372 and 350 <= cursorPosy <= 425:
+                GV.hoverButtonSquare = [True, False, False, False]
+            elif 303 <= cursorPosx <= 372 and 425 <= cursorPosy <= 500:
+                GV.hoverButtonSquare = [False, True, False, False]
+            elif 822 <= cursorPosx <= 897 and 350 <= cursorPosy <= 425:
+                GV.hoverButtonSquare = [False, False, True, False]
+            elif 822 <= cursorPosx <= 897 and 425 <= cursorPosy <= 500:
+                GV.hoverButtonSquare = [False, False, False, True]
+            elif 500 <= cursorPosx <= 700 and 500 <= cursorPosy <= 550:
+                GV.hoverButtonCashOut = True
+
     def betting_areas(self):
         for chip_index in reversed(GV.chipDisplayPriority):
             chipPositionx = ((GV.chipData[chip_index[0]])[chip_index[1]])["position"][0]
