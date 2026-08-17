@@ -227,6 +227,10 @@ class game_variable: # Game variables
         self.hoverButtonSquare = [False, False, False, False]
         self.hoverButtonCashOut = False
 
+        self.gameData = [0, 0, 0, 0]
+
+        self.game = False
+
         self.spadesImage = asset_path(f"suits/spades.png")
         self.heartsImage = asset_path(f"suits/hearts.png")
         self.clubsImage = asset_path(f"suits/clubs.png")
@@ -582,28 +586,9 @@ class game_objects:
                 pygame.draw.circle(GV.display, GV.red_colour, (280, 105), 30)
             pygame.draw.circle(GV.display, GV.white_colour, (280, 105), 30, width=2)
 
-        GV.round = 0
         if GV.round == 0:
-            if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
-                box_colour1 = GV.dark_table_colour_accent
-            else:
-                box_colour1 = GV.table_colour_accent
-
-            if GV.hoverButtonSquare[2] or GV.hoverButtonSquare[3]:
-                box_colour2 = GV.dark_table_colour_accent
-            else:
-                box_colour2 = GV.table_colour_accent
-
-            pygame.draw.rect(GV.display, box_colour1, (303, 350, 75, 150))
-            pygame.draw.rect(GV.display, box_colour2, (822, 350, 75, 150))
-            buttontext1 = GV.betFunctionBetFont.render(f"BET", True, GV.white_colour)
-            buttontext2 = GV.betFunctionBetFont.render(f"BET", True, GV.white_colour)
-            buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
-            buttontext2_rotated = pygame.transform.rotate(buttontext2, 270)
-            buttontext1rect1 = buttontext1_rotated.get_rect(center=(340, 425))
-            buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
-            GV.display.blit(buttontext1_rotated, buttontext1rect1)
-            GV.display.blit(buttontext2_rotated, buttontext2rect2)
+            pygame.draw.rect(GV.display, GV.table_colour_accent, (303, 350, 75, 150))
+            pygame.draw.rect(GV.display, GV.table_colour_accent, (822, 350, 75, 150))
         elif GV.round == 1:
             if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
                 box_colour1 = GV.semi_black_colour
@@ -714,17 +699,21 @@ class game_objects:
             clubsuit = pygame.transform.smoothscale(pygame.image.load((GV.clubsImage)), (75, 75)).convert_alpha()
             rect = clubsuit.get_rect(center=(858, 462.5))
             GV.display.blit(clubsuit, rect)
-        if GV.round != 0:
-            if GV.hoverButtonCashOut:
-                box_colour = GV.bright_green
-            else:
-                box_colour = GV.semi_bright_green
-            pygame.draw.rect(GV.display, box_colour, (500, 497, 200, 50))
-            buttontext1 = GV.betFunctionInOutFont.render(f"CASH OUT", True, GV.white_colour)
-            buttontextrect1 = buttontext1.get_rect(center=(600, 522))
-            GV.display.blit(buttontext1, buttontextrect1)
+
+        if GV.hoverButtonCashOut and GV.chipBet:
+            box_colour = GV.bright_green
+        elif GV.chipBet:
+            box_colour = GV.semi_bright_green
         else:
-            pygame.draw.rect(GV.display, GV.table_colour_accent, (500, 497, 200, 50))
+            box_colour = GV.semi_red_colour
+        pygame.draw.rect(GV.display, box_colour, (500, 497, 200, 50))
+        if GV.round != 0:
+            buttontext1 = GV.betFunctionInOutFont.render(f"CASH OUT", True, GV.white_colour)
+        elif GV.round == 0:
+            buttontext1 = GV.betFunctionInOutFont.render(f"BET", True, GV.white_colour)
+        buttontextrect1 = buttontext1.get_rect(center=(600, 522))
+        GV.display.blit(buttontext1, buttontextrect1)
+            
 
         pygame.draw.rect(GV.display, (255, 255, 255), (303, 350, 75, 150), 3)
         pygame.draw.rect(GV.display, (255, 255, 255), (822, 350, 75, 150), 3)
@@ -766,6 +755,47 @@ class game_functions():
                         GV.chipSmallExchangeListtemp.reverse()
                 if event.button == 1:
                     cursorPosx, cursorPosy = pygame.mouse.get_pos()
+
+                    if 500 <= cursorPosx <= 700 and 500 <= cursorPosy <= 550 and GV.chipBet and not GV.game and GV.round == 0:
+                        GV.game = True
+                        for self.index_var in GV.chipBet:
+                            ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] = True
+
+                    GV.gameData = [0, 0, 0, 0]
+                    if GV.round == 1:
+                        for index, value in enumerate(GV.hoverButtonSquare):
+                            if value:
+                                if index == 0 or index == 1:
+                                    GV.gameData[0] = 1
+                                elif index == 2 or index == 3:
+                                    GV.gameData[2] = 1
+                    elif GV.round == 2:
+                        for index, value in enumerate(GV.hoverButtonSquare):
+                            if value:
+                                if index == 0 or index == 1:
+                                    GV.gameData[0] = 1
+                                elif index == 2 or index == 3:
+                                    GV.gameData[2] = 1
+
+                    elif GV.round == 3:
+                        for index, value in enumerate(GV.hoverButtonSquare):
+                            if value:
+                                if index == 0 or index == 1:
+                                    GV.gameData[0] = 1
+                                elif index == 2 or index == 3:
+                                    GV.gameData[2] = 1
+
+                    elif GV.round == 4:
+                        for index, value in enumerate(GV.hoverButtonSquare):
+                            if value:
+                                if index == 0:
+                                    GV.gameData[0] = 1
+                                elif index == 1:
+                                    GV.gameData[1] = 1
+                                elif index == 2:
+                                    GV.gameData[2] = 1
+                                elif index == 3:
+                                    GV.gameData[3] = 1
                     for self.index_var in reversed(GV.chipDisplayPriority):
                         CursorPos_CirclePosx = cursorPosx - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
                         CursorPos_CirclePosy = cursorPosy - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
@@ -894,10 +924,11 @@ class game_functions():
                     GV.chipExchangeHighlight = None
                     GV.chipExchangehighlightOn = False
         if GV.mousePosChange == True:
-            GV.hoverButtonSquare = [False, False, False, False]
-            GV.hoverButtonCashOut = False
-            (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = pygame.mouse.get_pos()[0] - GV.mouseStartPos[0] + GV.chipCurrentPos[0]
-            (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = pygame.mouse.get_pos()[1] - GV.mouseStartPos[1] + GV.chipCurrentPos[1]
+            if not ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"]:
+                GV.hoverButtonSquare = [False, False, False, False]
+                GV.hoverButtonCashOut = False
+                (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = pygame.mouse.get_pos()[0] - GV.mouseStartPos[0] + GV.chipCurrentPos[0]
+                (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = pygame.mouse.get_pos()[1] - GV.mouseStartPos[1] + GV.chipCurrentPos[1]
         else:
             cursorPosx, cursorPosy = pygame.mouse.get_pos()
             GV.hoverButtonCashOut = False
@@ -927,7 +958,10 @@ class game_functions():
                     GV.chipBet.remove(chip_index)
 
     def ride_the_duck_function(self):
-        pass
+        if GV.round == 0:
+            GV.round = 1
+
+            
 
 GF = game_functions()
 
@@ -959,6 +993,8 @@ class pygame_function:
             self.FPS.tick(self.fps)
             GF.player_function()
             GF.betting_areas()
+            if GV.game:
+                GF.ride_the_duck_function()
             self.on_render()
             pygame.display.flip()
         self.on_cleanup()
