@@ -230,7 +230,6 @@ class game_variable: # Game variables
         self.hoverButtonCashOut = False
 
         self.gameButtonResult = [False, False, False, False]
-        self.gameButtonResultCashOut = False
         self.shuffle_count = 0
 
         self.gameHand = []
@@ -596,9 +595,6 @@ class game_objects:
             pygame.draw.circle(GV.display, GV.white_colour, (280, 105), 30, width=2)
 
         if GV.round == 0:
-            pygame.draw.rect(GV.display, GV.table_colour_accent, (303, 350, 75, 150))
-            pygame.draw.rect(GV.display, GV.table_colour_accent, (822, 350, 75, 150))
-        elif GV.round == 0:
             if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
                 box_colour1 = GV.semi_black_colour
             else:
@@ -619,7 +615,7 @@ class game_objects:
             buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
             GV.display.blit(buttontext1_rotated, buttontext1rect1)
             GV.display.blit(buttontext2_rotated, buttontext2rect2)
-        elif GV.round == 2:
+        elif GV.round == 1:
             if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
                 box_colour1 = GV.semi_black_colour
             else:
@@ -640,7 +636,7 @@ class game_objects:
             buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
             GV.display.blit(buttontext1_rotated, buttontext1rect1)
             GV.display.blit(buttontext2_rotated, buttontext2rect2)
-        elif GV.round == 3:
+        elif GV.round == 2:
             if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
                 box_colour1 = GV.semi_black_colour
             else:
@@ -661,7 +657,7 @@ class game_objects:
             buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
             GV.display.blit(buttontext1_rotated, buttontext1rect1)
             GV.display.blit(buttontext2_rotated, buttontext2rect2)
-        elif GV.round == 4:
+        elif GV.round == 3:
             if GV.hoverButtonSquare[0]:
                 box_colour1 = GV.semi_red_colour
             else:
@@ -709,7 +705,7 @@ class game_objects:
             rect = clubsuit.get_rect(center=(858, 462.5))
             GV.display.blit(clubsuit, rect)
 
-        if GV.hoverButtonCashOut and GV.chipBet:
+        if GV.hoverButtonCashOut and GV.chipBet and GV.round != 0:
             box_colour = GV.bright_green
         elif GV.chipBet:
             box_colour = GV.semi_bright_green
@@ -718,12 +714,9 @@ class game_objects:
         pygame.draw.rect(GV.display, box_colour, (500, 497, 200, 50))
         if GV.round != 0:
             buttontext1 = GV.betFunctionInOutFont.render(f"CASH OUT", True, GV.white_colour)
-        elif GV.round == 0:
-            buttontext1 = GV.betFunctionInOutFont.render(f"BET", True, GV.white_colour)
-        buttontextrect1 = buttontext1.get_rect(center=(600, 522))
-        GV.display.blit(buttontext1, buttontextrect1)
+            buttontextrect1 = buttontext1.get_rect(center=(600, 522))
+            GV.display.blit(buttontext1, buttontextrect1)
             
-
         pygame.draw.rect(GV.display, (255, 255, 255), (303, 350, 75, 150), 3)
         pygame.draw.rect(GV.display, (255, 255, 255), (822, 350, 75, 150), 3)
         pygame.draw.rect(GV.display, GV.highlight_yellow, (500, 497, 200, 50), 3)
@@ -777,18 +770,25 @@ class game_functions():
                             GV.chipExchangeStr1 = (f"{GV.chipExchangeValue1:,}")
                         GV.chipSmallExchangeListtemp.reverse()
                 if event.button == 1:
-                    GV.gameButtonResultCashOut = False
 
                     cursorPosx, cursorPosy = pygame.mouse.get_pos()
 
-                    if 500 <= cursorPosx <= 700 and 500 <= cursorPosy <= 550 and GV.chipBet and not GV.game and GV.round == 0:
+                    if GV.chipBet and not GV.game and GV.round == 0 and any(GV.hoverButtonSquare):
                         GV.game = True
-                        GV.round = 1
                         for self.index_var in GV.chipBet:
                             ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] = True
+                        for index, value in enumerate(GV.hoverButtonSquare):
+                            if value:
+                                if index == 0 or index == 1:
+                                    GV.gameButtonResult[0] = True
+                                    GV.round = 1
+                                elif index == 2 or index == 3:
+                                    GV.gameButtonResult[2] = True
+                                    GV.round = 1
 
-                    if GV.round != 0 and GV.hoverButtonCashOut:
-                        GV.gameButtonResultCashOut = True
+                    elif GV.round != 0 and GV.hoverButtonCashOut:
+                        GV.gamepayout = True
+
                     elif GV.round == 1:
                         for index, value in enumerate(GV.hoverButtonSquare):
                             if value:
@@ -798,6 +798,7 @@ class game_functions():
                                 elif index == 2 or index == 3:
                                     GV.gameButtonResult[2] = True
                                     GV.round = 2
+
                     elif GV.round == 2:
                         for index, value in enumerate(GV.hoverButtonSquare):
                             if value:
@@ -811,28 +812,18 @@ class game_functions():
                     elif GV.round == 3:
                         for index, value in enumerate(GV.hoverButtonSquare):
                             if value:
-                                if index == 0 or index == 1:
-                                    GV.gameButtonResult[0] = True
-                                    GV.round = 4
-                                elif index == 2 or index == 3:
-                                    GV.gameButtonResult[2] = True
-                                    GV.round = 4
-
-                    elif GV.round == 4:
-                        for index, value in enumerate(GV.hoverButtonSquare):
-                            if value:
                                 if index == 0:
                                     GV.gameButtonResult[0] = True
-                                    GV.round = 5
+                                    GV.round = 4
                                 elif index == 1:
                                     GV.gameButtonResult[1] = True
-                                    GV.round = 5
+                                    GV.round = 4
                                 elif index == 2:
                                     GV.gameButtonResult[2] = True
-                                    GV.round = 5
+                                    GV.round = 4
                                 elif index == 3:
                                     GV.gameButtonResult[3] = True
-                                    GV.round = 5
+                                    GV.round = 4
 
                     for self.index_var in reversed(GV.chipDisplayPriority):
                         CursorPos_CirclePosx = cursorPosx - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
@@ -842,8 +833,12 @@ class game_functions():
 
                         if CursorPos_CirclePos <= GV.chipRadius**2 and ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] is False:
 
-                            if GV.gamefail:
-                                GV.gamefail = False
+                            if GV.gamefail or GV.gamepayout:
+                                print("TRIGGER")
+                                if GV.gamefail:
+                                    GV.gamefail = False
+                                if GV.gamepayout:
+                                    GV.gamepayout = False
                                 GV.game = False
                                 GV.gameHand.clear()
                                 GV.gameCardPositon.clear()
@@ -994,42 +989,31 @@ class game_functions():
             GV.cardDeck.append(GV.cardDeck[0])
 
             GV.gamefail = False
-            GV.gamepayout = False
-            if GV.round == 2:
+            if GV.round == 1:
                 GV.gameCardPositon.append(RICD(350, 260))
                 if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
-                    print(1)
                     pass # BLACK
                 elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
-                    print(2)
                     pass # RED
-                elif GV.gameButtonResultCashOut:
-                    GV.gamepayout == True
-                    print(3)
                 else:
                     GV.gamefail = True
-                    print(4)
-            elif GV.round == 3:
+            elif GV.round == 2:
                 GV.gameCardPositon.append(RICD(517, 260))
                 if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
                     pass # ABOVE
                 elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
                     pass # BELOW
-                elif GV.gameButtonResultCashOut:
-                    GV.gamepayout == True
                 else:
                     GV.gamefail = True
-            elif GV.round == 4:
+            elif GV.round == 3:
                 GV.gameCardPositon.append(RICD(683, 260))
                 if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
                      pass # INSIDE
                 elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
                     pass # OUTSIDE
-                elif GV.gameButtonResultCashOut:
-                    GV.gamepayout == True
                 else:
                     GV.gamefail = True
-            elif GV.round == 5:
+            elif GV.round == 4:
                 GV.gameCardPositon.append(RICD(850, 260))
                 if int(GV.gameHand[-1][0]) == 0 and GV.gameButtonResult[0]:
                      pass # SPADE
@@ -1039,8 +1023,6 @@ class game_functions():
                     pass # DIAMOND
                 elif int(GV.gameHand[-1][0]) == 3 and GV.gameButtonResult[3]:
                     pass # CLUB
-                elif GV.gameButtonResultCashOut:
-                    GV.gamepayout == True
                 else:
                     GV.gamefail = True
             
@@ -1074,40 +1056,40 @@ class game_functions():
 
                 GV.round = 0
                 GV.chipBet.clear()
-            elif GV.gamepayout:
-                GV.round = 0
-
-                for chip in GV.chipBet:
-                    CHIPS[chip[0]] += 1
-
-                    for index, _ in enumerate(GV.chipData):
-                        GV.chipData[index].clear()
-
-                    for index, i in enumerate(CHIPS):
-                        if i != 0:
-                            GV.offset = 5
-                            GV.offsetreal = 0
-                            GV.sideOffset = 0
-                            for _ in range(0, i):
-                                GV.sideOffset = int(str(GV.offset/350)[0]) * 5
-                                GV.offset = GV.offset - int(str(GV.offset/350)[0]) * 350
-                                GV.chipData[index].append({"value": GV.chipValues[index],
-                                                                "colour": GV.chipValueColours[index],
-                                                                "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
-                                                                "override": False,
-                                                            })
-                                GV.offset += 10
-                                GV.offsetreal += 10
-                    GV.chipDisplayPriority.clear()
-                    for indexa, lista in enumerate(GV.chipData):
-                        for indexb, _ in enumerate(lista):
-                            GV.chipDisplayPriority.append((indexa, indexb))
-
-                GV.chipBet.clear()
 
             GV.gameButtonResult = [False, False, False, False]
-            GV.gameButtonResultCashOut = False
+            GV.gamepayout = False
             GV.cardDeck.remove(GV.cardDeck[0])
+        elif GV.gamepayout and GV.round != 0:
+            GV.round = 0
+
+            for chip in GV.chipBet:
+                CHIPS[chip[0]] += 1
+
+                for index, _ in enumerate(GV.chipData):
+                    GV.chipData[index].clear()
+
+                for index, i in enumerate(CHIPS):
+                    if i != 0:
+                        GV.offset = 5
+                        GV.offsetreal = 0
+                        GV.sideOffset = 0
+                        for _ in range(0, i):
+                            GV.sideOffset = int(str(GV.offset/350)[0]) * 5
+                            GV.offset = GV.offset - int(str(GV.offset/350)[0]) * 350
+                            GV.chipData[index].append({"value": GV.chipValues[index],
+                                                            "colour": GV.chipValueColours[index],
+                                                            "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
+                                                            "override": False,
+                                                        })
+                            GV.offset += 10
+                            GV.offsetreal += 10
+                GV.chipDisplayPriority.clear()
+                for indexa, lista in enumerate(GV.chipData):
+                    for indexb, _ in enumerate(lista):
+                        GV.chipDisplayPriority.append((indexa, indexb))
+
+            GV.chipBet.clear()
 
             
         
@@ -1136,7 +1118,7 @@ class pygame_function:
         GO.chip_objects()
         if GV.gameHand:
             GO.card_object()
-        print(GV.gameButtonResultCashOut)
+        print(GV.gamepayout)
     def on_cleanup(self):
         pygame.quit()
 
