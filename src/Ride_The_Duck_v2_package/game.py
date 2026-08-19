@@ -109,7 +109,7 @@ def sind(x):
     return math.sin(math.radians(x))
 
 def RICD(midx, midy):# random int card display
-    return random.randint(midx-3, midx+3), random.randint(midy-3, midy+3)
+    return random.randint(midx-10, midx+10), random.randint(midy-10, midy+10)
 
 class game_variable: # Game variables
     def __init__(self):
@@ -738,6 +738,7 @@ class game_objects:
             value_var -= 2
         
             cardpos = GV.gameCardPositon[index]
+            print(GV.gameCardPositon)
             card = pygame.transform.smoothscale(pygame.image.load((GV.CardFiles[suit_var][value_var])), (105, 140)).convert_alpha()
             rect = card.get_rect(center=(cardpos))
             GV.display.blit(card, rect)
@@ -817,12 +818,17 @@ class game_functions():
                             if value:
                                 if index == 0:
                                     GV.gameButtonResult[0] = True
+                                    GV.round = 5
                                 elif index == 1:
                                     GV.gameButtonResult[1] = True
+                                    GV.round = 5
                                 elif index == 2:
                                     GV.gameButtonResult[2] = True
+                                    GV.round = 5
                                 elif index == 3:
                                     GV.gameButtonResult[3] = True
+                                    GV.round = 5
+
                     for self.index_var in reversed(GV.chipDisplayPriority):
                         CursorPos_CirclePosx = cursorPosx - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
                         CursorPos_CirclePosy = cursorPosy - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
@@ -830,10 +836,13 @@ class game_functions():
                         CursorPos_CirclePos = CursorPos_CirclePosx**2 + CursorPos_CirclePosy**2
 
                         if CursorPos_CirclePos <= GV.chipRadius**2 and ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] is False:
+
                             if GV.gamefail:
                                 GV.gamefail = False
                                 GV.game = False
                                 GV.gameHand.clear()
+                                GV.gameCardPositon.clear()
+
                             GV.mouseStartPos = pygame.mouse.get_pos()
                             GV.mousePosChange = True
                             GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
@@ -975,16 +984,48 @@ class game_functions():
                     GV.chipBet.remove(chip_index)
 
     def ride_the_duck_function(self):
-        if GV.round == 2 and any(GV.gameButtonResult):
+        if any(GV.gameButtonResult):
             GV.gameHand.append(GV.cardDeck[0])
             GV.cardDeck.append(GV.cardDeck[0])
 
-            GV.gameCardPositon.append(RICD(350, 260))
-            if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
-                print("WOK")
-            elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
-                pass # RED
-            else:
+            GV.gamefail = False
+            if GV.round == 2:
+                GV.gameCardPositon.append(RICD(350, 260))
+                if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
+                    pass # BLACK
+                elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
+                    pass # RED
+                else:
+                    GV.gamefail = True
+            elif GV.round == 3:
+                GV.gameCardPositon.append(RICD(517, 260))
+                if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
+                    pass # ABOVE
+                elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
+                    pass # BELOW
+                else:
+                    GV.gamefail = True
+            elif GV.round == 4:
+                GV.gameCardPositon.append(RICD(683, 260))
+                if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
+                     pass # INSIDE
+                elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
+                    pass # OUTSIDE
+                else:
+                    GV.gamefail = True
+            elif GV.round == 5:
+                GV.gameCardPositon.append(RICD(850, 260))
+                if int(GV.gameHand[-1][0]) == 0 and GV.gameButtonResult[0]:
+                     pass # SPADE
+                elif int(GV.gameHand[-1][0]) == 1 and GV.gameButtonResult[1]:
+                    pass # HEART
+                elif int(GV.gameHand[-1][0]) == 2 and GV.gameButtonResult[2]:
+                    pass # DIAMOND
+                elif int(GV.gameHand[-1][0]) == 3 and GV.gameButtonResult[3]:
+                    pass # CLUB
+                else:
+                    GV.gamefail = True
+            if GV.gamefail:
                 for chip in GV.chipBet:
                     CHIPS[chip[0]] -= 1
 
@@ -1012,7 +1053,6 @@ class game_functions():
                         for indexb, _ in enumerate(lista):
                             GV.chipDisplayPriority.append((indexa, indexb))
 
-                GV.gamefail = True
                 GV.round = 0
                 GV.chipBet.clear()
             GV.gameButtonResult = [False, False, False, False]
