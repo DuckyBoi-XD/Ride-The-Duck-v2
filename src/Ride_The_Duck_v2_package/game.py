@@ -108,6 +108,8 @@ def cosd(x):
 def sind(x):
     return math.sin(math.radians(x))
 
+def RICD(midx, midy):# random int card display
+    return random.randint(midx-3, midx+3), random.randint(midy-3, midy+3)
 
 class game_variable: # Game variables
     def __init__(self):
@@ -227,9 +229,14 @@ class game_variable: # Game variables
         self.hoverButtonSquare = [False, False, False, False]
         self.hoverButtonCashOut = False
 
-        self.gameData = [0, 0, 0, 0]
+        self.gameButtonResult = [False, False, False, False]
+        self.shuffle_count = 0
+
+        self.gameHand = []
+        self.gameCardPositon = []
 
         self.game = False
+        self.gamefail = False
 
         self.spadesImage = asset_path(f"suits/spades.png")
         self.heartsImage = asset_path(f"suits/hearts.png")
@@ -252,7 +259,7 @@ class game_variable: # Game variables
             self.tempcardDeck.append(f"{suit[-1]}13")
             self.tempcardDeck.append(f"{suit[-1]}14")
 
-        self.cardDeck = self.tempcardDeck * 6
+        self.cardDeck = self.tempcardDeck
         random.shuffle(self.cardDeck)
         random.shuffle(self.cardDeck)
 
@@ -719,7 +726,21 @@ class game_objects:
         pygame.draw.rect(GV.display, (255, 255, 255), (822, 350, 75, 150), 3)
         pygame.draw.rect(GV.display, GV.highlight_yellow, (500, 497, 200, 50), 3)
         pygame.draw.rect(GV.display, GV.highlight_yellow, (375, 350, 450, 150), 3)
+    def card_object(self):
+        for index, card in enumerate(GV.gameHand):
 
+            suit_var = int(card[0])
+            if len(card) == 3:
+                value_var = int(card[1:3])
+            else:
+                value_var = int(card[1])
+
+            value_var -= 2
+        
+            cardpos = GV.gameCardPositon[index]
+            card = pygame.transform.smoothscale(pygame.image.load((GV.CardFiles[suit_var][value_var])), (105, 140)).convert_alpha()
+            rect = card.get_rect(center=(cardpos))
+            GV.display.blit(card, rect)
 GO = game_objects()
 
 class game_functions():
@@ -758,65 +779,61 @@ class game_functions():
 
                     if 500 <= cursorPosx <= 700 and 500 <= cursorPosy <= 550 and GV.chipBet and not GV.game and GV.round == 0:
                         GV.game = True
+                        GV.round = 1
                         for self.index_var in GV.chipBet:
                             ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] = True
 
-                    GV.gameData = [0, 0, 0, 0]
                     if GV.round == 1:
                         for index, value in enumerate(GV.hoverButtonSquare):
                             if value:
                                 if index == 0 or index == 1:
-                                    GV.gameData[0] = 1
+                                    GV.gameButtonResult[0] = True
+                                    GV.round = 2
                                 elif index == 2 or index == 3:
-                                    GV.gameData[2] = 1
+                                    GV.gameButtonResult[2] = True
+                                    GV.round = 2
                     elif GV.round == 2:
                         for index, value in enumerate(GV.hoverButtonSquare):
                             if value:
                                 if index == 0 or index == 1:
-                                    GV.gameData[0] = 1
+                                    GV.gameButtonResult[0] = True
+                                    GV.round = 3
                                 elif index == 2 or index == 3:
-                                    GV.gameData[2] = 1
+                                    GV.gameButtonResult[2] = True
+                                    GV.round = 3
 
                     elif GV.round == 3:
                         for index, value in enumerate(GV.hoverButtonSquare):
                             if value:
                                 if index == 0 or index == 1:
-                                    GV.gameData[0] = 1
+                                    GV.gameButtonResult[0] = True
+                                    GV.round = 4
                                 elif index == 2 or index == 3:
-                                    GV.gameData[2] = 1
+                                    GV.gameButtonResult[2] = True
+                                    GV.round = 4
 
                     elif GV.round == 4:
                         for index, value in enumerate(GV.hoverButtonSquare):
                             if value:
                                 if index == 0:
-                                    GV.gameData[0] = 1
+                                    GV.gameButtonResult[0] = True
                                 elif index == 1:
-                                    GV.gameData[1] = 1
+                                    GV.gameButtonResult[1] = True
                                 elif index == 2:
-                                    GV.gameData[2] = 1
+                                    GV.gameButtonResult[2] = True
                                 elif index == 3:
-                                    GV.gameData[3] = 1
+                                    GV.gameButtonResult[3] = True
                     for self.index_var in reversed(GV.chipDisplayPriority):
                         CursorPos_CirclePosx = cursorPosx - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
                         CursorPos_CirclePosy = cursorPosy - (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
 
                         CursorPos_CirclePos = CursorPos_CirclePosx**2 + CursorPos_CirclePosy**2
-                        '''
-                        if GV.bettingGame:
-                            if CursorPos_CirclePos <= GV.chipRadius**2 and GV.dOutcome:
-                                GV.bettingGame = False
-
-                            elif self.index_var in GV.chipBet2 or self.index_var in GV.chipBet3:
-                                GV.betChipOverride = True
-
-                            elif self.index_var in GV.chipBet1 and GV.splitOverride1:
-                                GV.betChipOverride = True
-
-                            elif self.index_var in GV.chipBet4 and GV.splitOverride2:
-                                GV.betChipOverride = True
-                        '''
 
                         if CursorPos_CirclePos <= GV.chipRadius**2 and ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] is False:
+                            if GV.gamefail:
+                                GV.gamefail = False
+                                GV.game = False
+                                GV.gameHand.clear()
                             GV.mouseStartPos = pygame.mouse.get_pos()
                             GV.mousePosChange = True
                             GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
@@ -958,8 +975,51 @@ class game_functions():
                     GV.chipBet.remove(chip_index)
 
     def ride_the_duck_function(self):
-        if GV.round == 0:
-            GV.round = 1
+        if GV.round == 2 and any(GV.gameButtonResult):
+            GV.gameHand.append(GV.cardDeck[0])
+            GV.cardDeck.append(GV.cardDeck[0])
+
+            GV.gameCardPositon.append(RICD(350, 260))
+            if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
+                print("WOK")
+            elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
+                pass # RED
+            else:
+                for chip in GV.chipBet:
+                    CHIPS[chip[0]] -= 1
+
+                    for index, _ in enumerate(GV.chipData):
+                        GV.chipData[index].clear()
+                    GV.chipDisplayPriority.clear()
+
+                    for index, i in enumerate(CHIPS):
+                        if i != 0:
+                            GV.offset = 5
+                            GV.offsetreal = 0
+                            GV.sideOffset = 0
+                            for _ in range(0, i):
+                                GV.sideOffset = int(str(GV.offset/350)[0]) * 5
+                                GV.offset = GV.offset - int(str(GV.offset/350)[0]) * 350
+                                GV.chipData[index].append({"value": GV.chipValues[index],
+                                                                "colour": GV.chipValueColours[index],
+                                                                "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
+                                                                "override": False,
+                                                            })
+                                GV.offset += 10
+                                GV.offsetreal += 10
+            
+                    for indexa, lista in enumerate(GV.chipData):
+                        for indexb, _ in enumerate(lista):
+                            GV.chipDisplayPriority.append((indexa, indexb))
+
+                GV.gamefail = True
+                GV.round = 0
+                GV.chipBet.clear()
+            GV.gameButtonResult = [False, False, False, False]
+            GV.cardDeck.remove(GV.cardDeck[0])
+
+            
+        
 
             
 
@@ -983,6 +1043,8 @@ class pygame_function:
         GO.on_init()
         GO.game_space()
         GO.chip_objects()
+        if GV.gameHand:
+            GO.card_object()
     def on_cleanup(self):
         pygame.quit()
 
