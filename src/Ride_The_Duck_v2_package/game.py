@@ -238,6 +238,9 @@ class game_variable: # Game variables
         self.game = False
         self.gamefail = False
         self.gamepayout = False
+        self.gamepushback = False
+
+        self.cardlengths = [0, 0, 0, 0]
 
         self.spadesImage = asset_path(f"suits/spades.png")
         self.heartsImage = asset_path(f"suits/hearts.png")
@@ -595,26 +598,34 @@ class game_objects:
             pygame.draw.circle(GV.display, GV.white_colour, (280, 105), 30, width=2)
 
         if GV.round == 0:
-            if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
-                box_colour1 = GV.semi_black_colour
+            if GV.gamepushback or GV.gamepayout or GV.gamefail:
+                    box_colour1 = GV.black_colour
+                    box_colour2 = GV.red_colour
             else:
-                box_colour1 = GV.black_colour
+                if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
+                    box_colour1 = GV.semi_black_colour
+                else:
+                    box_colour1 = GV.black_colour
 
-            if GV.hoverButtonSquare[2] or GV.hoverButtonSquare[3]:
-                box_colour2 = GV.semi_red_colour
-            else:
-                box_colour2 = GV.red_colour
+                if GV.hoverButtonSquare[2] or GV.hoverButtonSquare[3]:
+                    box_colour2 = GV.semi_red_colour
+                else:
+                    box_colour2 = GV.red_colour
 
             pygame.draw.rect(GV.display, box_colour1, (303, 350, 75, 150))
             pygame.draw.rect(GV.display, box_colour2, (822, 350, 75, 150))
-            buttontext1 = GV.betFunctionColourFont.render(f"BLACK", True, GV.white_colour)
-            buttontext2 = GV.betFunctionColourFont.render(f"RED", True, GV.white_colour)
-            buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
-            buttontext2_rotated = pygame.transform.rotate(buttontext2, 270)
-            buttontext1rect1 = buttontext1_rotated.get_rect(center=(340, 425))
-            buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
-            GV.display.blit(buttontext1_rotated, buttontext1rect1)
-            GV.display.blit(buttontext2_rotated, buttontext2rect2)
+
+            if GV.gamepushback or GV.gamepayout or GV.gamefail:
+                pass
+            else:
+                buttontext1 = GV.betFunctionColourFont.render(f"BLACK", True, GV.white_colour)
+                buttontext2 = GV.betFunctionColourFont.render(f"RED", True, GV.white_colour)
+                buttontext1_rotated = pygame.transform.rotate(buttontext1, 90)
+                buttontext2_rotated = pygame.transform.rotate(buttontext2, 270)
+                buttontext1rect1 = buttontext1_rotated.get_rect(center=(340, 425))
+                buttontext2rect2 = buttontext2_rotated.get_rect(center=(860, 425))
+                GV.display.blit(buttontext1_rotated, buttontext1rect1)
+                GV.display.blit(buttontext2_rotated, buttontext2rect2)
         elif GV.round == 1:
             if GV.hoverButtonSquare[0] or GV.hoverButtonSquare[1]:
                 box_colour1 = GV.semi_black_colour
@@ -833,12 +844,14 @@ class game_functions():
 
                         if CursorPos_CirclePos <= GV.chipRadius**2 and ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] is False:
 
-                            if GV.gamefail or GV.gamepayout:
+                            if GV.gamefail or GV.gamepayout or GV.gamepushback:
                                 print("TRIGGER")
                                 if GV.gamefail:
                                     GV.gamefail = False
                                 if GV.gamepayout:
                                     GV.gamepayout = False
+                                if GV.gamepushback:
+                                    GV.gamepushback = False
                                 GV.game = False
                                 GV.gameHand.clear()
                                 GV.gameCardPositon.clear()
@@ -988,6 +1001,11 @@ class game_functions():
             GV.gameHand.append(GV.cardDeck[0])
             GV.cardDeck.append(GV.cardDeck[0])
 
+            if len(GV.gameHand[-1]) == 3:
+                GV.cardlengths[(GV.round) - 1] = slice(1, 3)
+            else:
+                GV.cardlengths[(GV.round) - 1] = 1
+
             GV.gamefail = False
             if GV.round == 1:
                 GV.gameCardPositon.append(RICD(350, 260))
@@ -997,14 +1015,22 @@ class game_functions():
                     pass # RED
                 else:
                     GV.gamefail = True
+
             elif GV.round == 2:
                 GV.gameCardPositon.append(RICD(517, 260))
-                if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
+                if int(GV.gameHand[-1][GV.cardlengths[1]]) > int(GV.gameHand[0][GV.cardlengths[0]]) and GV.gameButtonResult[0]:
+                    print(1)
                     pass # ABOVE
-                elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
+                elif int(GV.gameHand[-1][GV.cardlengths[1]]) < int(GV.gameHand[0][GV.cardlengths[0]]) and GV.gameButtonResult[2]:
+                    print(2)
                     pass # BELOW
+                elif int(GV.gameHand[-1][GV.cardlengths[1]]) == int(GV.gameHand[0][GV.cardlengths[0]]) and (GV.gameButtonResult[0] or GV.gameButtonResult[2]):
+                    GV.gamepushback = True
+                    print(3)
                 else:
                     GV.gamefail = True
+                    print(4)
+
             elif GV.round == 3:
                 GV.gameCardPositon.append(RICD(683, 260))
                 if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
@@ -1013,6 +1039,7 @@ class game_functions():
                     pass # OUTSIDE
                 else:
                     GV.gamefail = True
+
             elif GV.round == 4:
                 GV.gameCardPositon.append(RICD(850, 260))
                 if int(GV.gameHand[-1][0]) == 0 and GV.gameButtonResult[0]:
@@ -1060,11 +1087,12 @@ class game_functions():
             GV.gameButtonResult = [False, False, False, False]
             GV.gamepayout = False
             GV.cardDeck.remove(GV.cardDeck[0])
-        elif GV.gamepayout and GV.round != 0:
+        elif (GV.gamepayout or GV.gamepushback) and GV.round != 0:
             GV.round = 0
 
             for chip in GV.chipBet:
-                CHIPS[chip[0]] += 1
+                if GV.gamepayout:
+                    CHIPS[chip[0]] += 1
 
                 for index, _ in enumerate(GV.chipData):
                     GV.chipData[index].clear()
@@ -1118,7 +1146,6 @@ class pygame_function:
         GO.chip_objects()
         if GV.gameHand:
             GO.card_object()
-        print(GV.gamepayout)
     def on_cleanup(self):
         pygame.quit()
 
