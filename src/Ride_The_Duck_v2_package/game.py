@@ -1112,16 +1112,12 @@ class game_functions():
                 CHIPS[chip[0]] -= 1
             for index, value in enumerate(GV.chipBetValues): # updates chip payout with winning multiplier
                 if value != 0:
-                    print(GV.gamemultiplier)
                     GV.chipBetValues[index] = value * GV.gamemultiplier
 
-            print(GV.chipBetValues)
 
             for index, value in enumerate(GV.chipBetValues): # tries to simplify the payout
                 if value != 0 and index != 9:
-                    print(value, int(GV.chipValues[index+1]))
                     if value % int(GV.chipValues[index+1]) == 0:
-                        print("TRIGGER")
                         GV.chipBetValues[index+1] = value/int(GV.chipValues[index+1])
 
             for parent_index, chips in enumerate(GV.chipBetValues):
