@@ -103,6 +103,8 @@ def save_game(chip_info = None, stats = None):
 
 CHIPS, STATS = load_game()
 
+CHIPS = [0, 10, 0, 0, 0, 0, 0, 0, 0, 0]
+
 def cosd(x):
     return math.cos(math.radians(x))
 def sind(x):
@@ -1119,17 +1121,25 @@ class game_functions():
             GV.cardHandValue.clear()
         elif (GV.gamepayout or GV.gamepushback) and GV.round != 0:
             if GV.gamepayout:
+
+                GV.chipBetPhyiscalValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
                 for chip in GV.chipBet:
                     CHIPS[chip[0]] -= 1
                 for index, value in enumerate(GV.chipBetValues): # updates chip payout with winning multiplier
                     if value != 0:
                         GV.chipBetValues[index] = value * GV.gamemultiplier
+                        GV.chipBetPhyiscalValue[index] = (int(GV.chipValues[index])) * value * GV.gamemultiplier
+                print(GV.chipBetPhyiscalValue)
 
-
-                for index, value in enumerate(GV.chipBetValues): # tries to simplify the payout
+                for index, value in enumerate(GV.chipBetPhyiscalValue): # tries to simplify the payout
                     if value != 0 and index != 9:
+                        print(value, int(GV.chipValues[index+1]))
                         if value % int(GV.chipValues[index+1]) == 0:
-                            GV.chipBetValues[index+1] = value/int(GV.chipValues[index+1])
+                            print("tiger")
+                            GV.chipBetValues[index] = 0
+                            GV.chipBetValues[index+1] = int(value/int(GV.chipValues[index+1]))
+                print(GV.chipBetValues)
 
             for parent_index, chips in enumerate(GV.chipBetValues):
                 if GV.gamepayout:
