@@ -241,6 +241,9 @@ class game_variable: # Game variables
         self.gamepushback = False
 
         self.cardlengths = [0, 0, 0, 0]
+        self.gamemultiplier = 0
+        self.chipBetValues = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.chipBetPhyiscalValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         self.spadesImage = asset_path(f"suits/spades.png")
         self.heartsImage = asset_path(f"suits/hearts.png")
@@ -793,9 +796,18 @@ class game_functions():
                                 if index == 0 or index == 1:
                                     GV.gameButtonResult[0] = True
                                     GV.round = 1
+
+                                    GV.chipBetValues = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                                    for chip in GV.chipBet:
+                                        GV.chipBetValues[chip[0]] += 1
+
                                 elif index == 2 or index == 3:
                                     GV.gameButtonResult[2] = True
                                     GV.round = 1
+
+                                    GV.chipBetValues = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                                    for chip in GV.chipBet:
+                                        GV.chipBetValues[chip[0]] += 1
 
                     elif GV.round != 0 and GV.hoverButtonCashOut:
                         GV.gamepayout = True
@@ -1010,8 +1022,10 @@ class game_functions():
             if GV.round == 1:
                 GV.gameCardPositon.append(RICD(350, 260))
                 if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
+                    GV.gamemultiplier = 2
                     pass # BLACK
                 elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
+                    GV.gamemultiplier = 2
                     pass # RED
                 else:
                     GV.gamefail = True
@@ -1019,23 +1033,23 @@ class game_functions():
             elif GV.round == 2:
                 GV.gameCardPositon.append(RICD(517, 260))
                 if int(GV.gameHand[-1][GV.cardlengths[1]]) > int(GV.gameHand[0][GV.cardlengths[0]]) and GV.gameButtonResult[0]:
-                    print(1)
+                    GV.gamemultiplier = 3
                     pass # ABOVE
                 elif int(GV.gameHand[-1][GV.cardlengths[1]]) < int(GV.gameHand[0][GV.cardlengths[0]]) and GV.gameButtonResult[2]:
-                    print(2)
+                    GV.gamemultiplier = 3
                     pass # BELOW
                 elif int(GV.gameHand[-1][GV.cardlengths[1]]) == int(GV.gameHand[0][GV.cardlengths[0]]) and (GV.gameButtonResult[0] or GV.gameButtonResult[2]):
                     GV.gamepushback = True
-                    print(3)
                 else:
                     GV.gamefail = True
-                    print(4)
 
             elif GV.round == 3:
                 GV.gameCardPositon.append(RICD(683, 260))
                 if int(GV.gameHand[-1][0]) in (0,3) and GV.gameButtonResult[0]:
-                     pass # INSIDE
+                    GV.gamemultiplier = 4
+                    pass # INSIDE
                 elif int(GV.gameHand[-1][0]) in (1,2) and GV.gameButtonResult[2]:
+                    GV.gamemultiplier = 4
                     pass # OUTSIDE
                 else:
                     GV.gamefail = True
@@ -1043,12 +1057,16 @@ class game_functions():
             elif GV.round == 4:
                 GV.gameCardPositon.append(RICD(850, 260))
                 if int(GV.gameHand[-1][0]) == 0 and GV.gameButtonResult[0]:
-                     pass # SPADE
+                    GV.gamemultiplier = 20
+                    pass # SPADE
                 elif int(GV.gameHand[-1][0]) == 1 and GV.gameButtonResult[1]:
+                    GV.gamemultiplier = 20
                     pass # HEART
                 elif int(GV.gameHand[-1][0]) == 2 and GV.gameButtonResult[2]:
+                    GV.gamemultiplier = 20
                     pass # DIAMOND
                 elif int(GV.gameHand[-1][0]) == 3 and GV.gameButtonResult[3]:
+                    GV.gamemultiplier = 20
                     pass # CLUB
                 else:
                     GV.gamefail = True
@@ -1083,19 +1101,37 @@ class game_functions():
 
                 GV.round = 0
                 GV.chipBet.clear()
+                GV.gamemultiplier = 0
 
             GV.gameButtonResult = [False, False, False, False]
             GV.gamepayout = False
             GV.cardDeck.remove(GV.cardDeck[0])
         elif (GV.gamepayout or GV.gamepushback) and GV.round != 0:
-            GV.round = 0
 
             for chip in GV.chipBet:
+                CHIPS[chip[0]] -= 1
+            for index, value in enumerate(GV.chipBetValues): # updates chip payout with winning multiplier
+                if value != 0:
+                    print(GV.gamemultiplier)
+                    GV.chipBetValues[index] = value * GV.gamemultiplier
+
+            print(GV.chipBetValues)
+
+            for index, value in enumerate(GV.chipBetValues): # tries to simplify the payout
+                if value != 0 and index != 9:
+                    print(value, int(GV.chipValues[index+1]))
+                    if value % int(GV.chipValues[index+1]) == 0:
+                        print("TRIGGER")
+                        GV.chipBetValues[index+1] = value/int(GV.chipValues[index+1])
+
+            for parent_index, chips in enumerate(GV.chipBetValues):
                 if GV.gamepayout:
-                    CHIPS[chip[0]] += 1
+                    CHIPS[parent_index] += chips
 
                 for index, _ in enumerate(GV.chipData):
                     GV.chipData[index].clear()
+
+                print(CHIPS)
 
                 for index, i in enumerate(CHIPS):
                     if i != 0:
@@ -1118,6 +1154,8 @@ class game_functions():
                         GV.chipDisplayPriority.append((indexa, indexb))
 
             GV.chipBet.clear()
+            GV.gamemultiplier = 0
+            GV.round = 0
 
             
         
