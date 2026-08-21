@@ -291,6 +291,7 @@ class game_variable: # Game variables
                                                  "colour": self.chipValueColours[index],
                                                  "position": [((self.chipStartPositions)[self.chipValues[index]])[0] - self.sideOffset, ((self.chipStartPositions[self.chipValues[index]])[1] - self.offset)],
                                                  "override": False,
+                                                 "outline": False,
                                                 })
                     self.offset += 10
                     self.offsetreal += 10
@@ -444,8 +445,16 @@ class game_objects:
                     chipOutlineWidth = 2
 
             elif value in GV.chipExchange or value in GV.chipBet:
-                chipOutlineColour = GV.bright_green
-                chipOutlineWidth = 2
+                if ((GV.chipData[value[0]])[value[1]])["outline"] and not ((GV.chipData[value[0]])[value[1]])["override"]:
+                    chipOutlineColour = GV.yellow_green
+                    chipOutlineWidth = 1
+                else:
+                    chipOutlineColour = GV.bright_green
+                    chipOutlineWidth = 2
+
+            elif ((GV.chipData[value[0]])[value[1]])["outline"] and not ((GV.chipData[value[0]])[value[1]])["override"]:
+                chipOutlineColour = GV.highlight_yellow
+                chipOutlineWidth = 1
                 
             elif GV.chipValueColours[value[0]] == GV.black_colour or GV.chipValueColours[value[0]] == GV.blue_colour:
                 chipOutlineColour = GV.white_colour
@@ -906,7 +915,8 @@ class game_functions():
                                     GV.chipData[index].append({"value": GV.chipValues[index],
                                                                     "colour": GV.chipValueColours[index],
                                                                     "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
-                                                                    "override": False
+                                                                    "override": False,
+                                                                    "outline": False,
                                                                 })
                                     GV.offset += 10
                                     GV.offsetreal += 10 
@@ -915,35 +925,6 @@ class game_functions():
                         
                         GV.chipSmallExchangeListtemp = list(GV.chipSmallExchangeList)
                         GV.chipExchangeStr1 = (f"{GV.chipExchangeValue1:,}")
-
-                        '''
-                        if GV.bettingGame:
-                            chipBet1_temp = []
-                            chipBet2_temp = []
-                            chipBet3_temp = []
-                            chipBet4_temp = []
-
-                            for index, value in enumerate(GV.chipBet1):
-                                GV.chipPositions[value[0]].append(GV.gameChipPos1[index])
-                                chipBet1_temp.append((value[0], len(GV.chipPositions[value[0]]) - 1))
-                            for index, value in enumerate(GV.chipBet2):
-                                GV.chipPositions[value[0]].append(GV.gameChipPos2[index])
-                                chipBet2_temp.append((value[0], len(GV.chipPositions[value[0]]) - 1))
-                            for index, value in enumerate(GV.chipBet3):
-                                GV.chipPositions[value[0]].append(GV.gameChipPos3[index])
-                                chipBet3_temp.append((value[0], len(GV.chipPositions[value[0]]) - 1))
-                            for index, value in enumerate(GV.chipBet4):
-                                GV.chipPositions[value[0]].append(GV.gameChipPos4[index])
-                                chipBet4_temp.append((value[0], len(GV.chipPositions[value[0]]) - 1))
-
-                            GV.chipBet1[:] = chipBet1_temp
-                            GV.chipBet2[:] = chipBet2_temp
-                            GV.chipBet3[:] = chipBet3_temp
-                            GV.chipBet4[:] = chipBet4_temp
-                        else:
-                            for index, _ in enumerate(GV.chipBet):
-                                GV.chipBet[index].clear()
-                        '''
 
                         GV.chipDisplayPriority.clear()
 
@@ -995,6 +976,24 @@ class game_functions():
                 GV.hoverButtonSquare = [False, False, False, True]
             elif 500 <= cursorPosx <= 700 and 500 <= cursorPosy <= 550:
                 GV.hoverButtonCashOut = True
+            else:
+                for chipindex in reversed(GV.chipDisplayPriority):
+                    CursorPos_CirclePosx = cursorPosx - (((GV.chipData[chipindex[0]]))[chipindex[1]]["position"])[0]
+                    CursorPos_CirclePosy = cursorPosy - (((GV.chipData[chipindex[0]]))[chipindex[1]]["position"])[1]
+                    CursorPos_CirclePos = CursorPos_CirclePosx**2 + CursorPos_CirclePosy**2
+
+                    if CursorPos_CirclePos <= GV.chipRadius**2:
+                        if not (((GV.chipData[chipindex[0]]))[chipindex[1]])["outline"]:
+                            for indexa, chiplist in enumerate(GV.chipData):
+                                for indexb, chip in enumerate(chiplist):
+                                    ((GV.chipData[indexa])[indexb])["outline"] = False
+                            (((GV.chipData[chipindex[0]]))[chipindex[1]])["outline"] = True
+                        break
+
+                    else:
+                        if (((GV.chipData[chipindex[0]]))[chipindex[1]])["outline"]:
+                            (((GV.chipData[chipindex[0]]))[chipindex[1]])["outline"] = False
+                            
 
     def betting_areas(self):
         for chip_index in reversed(GV.chipDisplayPriority):
@@ -1103,6 +1102,7 @@ class game_functions():
                                                                 "colour": GV.chipValueColours[index],
                                                                 "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
                                                                 "override": False,
+                                                                "outline": False,
                                                             })
                                 GV.offset += 10
                                 GV.offsetreal += 10
@@ -1181,6 +1181,7 @@ class game_functions():
                                                             "colour": GV.chipValueColours[index],
                                                             "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
                                                             "override": False,
+                                                            "outline": False,
                                                         })
                             GV.offset += 10
                             GV.offsetreal += 10
