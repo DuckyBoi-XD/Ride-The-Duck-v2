@@ -103,7 +103,7 @@ def save_game(chip_info = None, stats = None):
 
 CHIPS, STATS = load_game()
 
-CHIPS = [0, 10, 0, 0, 0, 0, 0, 0, 0, 0]
+CHIPS = [0, 0, 10, 0, 0, 0, 0, 0, 0, 0]
 
 def cosd(x):
     return math.cos(math.radians(x))
@@ -1137,7 +1137,7 @@ class game_functions():
                     bit20 = False
                     bit4 = False
 
-                    if value != 0 and index != 7 and GV.gamemultiplier == 20:
+                    if value != 0 and index != 7 and (GV.gamemultiplier == 20 or value >= 2):
                         print(1, value, int(GV.chipValues[index+3]))
                         if value % int(GV.chipValues[index+3]) == 0:
                             bit20 = True
@@ -1147,7 +1147,7 @@ class game_functions():
                             bit20 = False
 
                     if not bit20:
-                        if value != 0 and index != 8 and GV.gamemultiplier >= 4:
+                        if value != 0 and index != 8 and (GV.gamemultiplier >= 4 or value >= 2):
                             print(2, value, int(GV.chipValues[index+2]))
                             if value % int(GV.chipValues[index+2]) == 0:
                                 bit20 = True
@@ -1156,7 +1156,7 @@ class game_functions():
                             else:
                                 bit4 = False
                     if not bit4 and not bit20:
-                        if value != 0 and index != 9 and GV.gamemultiplier >= 3:
+                        if value != 0 and index != 9 and (GV.gamemultiplier >= 3 or value >= 2):
                             print(3, value, int(GV.chipValues[index+1]))
                             if value % int(GV.chipValues[index+1]) == 0:
                                 GV.chipBetValues[index] = 0
