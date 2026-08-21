@@ -194,6 +194,8 @@ class game_variable: # Game variables
         self.betFunctionColourFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 30)
         self.betFunctionInOutFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 25)
         self.betFunctionSplitFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 25)
+        self.betFunctionSuitFont = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 90)
+        self.betFunctionSuitFont2 = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 80)
 
         self.tableTextFontFull = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 40)
         self.tableTextFontSemi = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 25)
@@ -226,7 +228,7 @@ class game_variable: # Game variables
         self.exchangeChipPos = []
         self.tempcardDeck = []
 
-        self.round = 0 # 0: none, 1: br, 2: hl, 3: io:, 4: suit
+        self.round = 0
         self.chipBet = []
         self.hoverButtonSquare = [False, False, False, False]
         self.hoverButtonCashOut = False
@@ -239,7 +241,7 @@ class game_variable: # Game variables
 
         self.game = False
         self.gamefail = False
-        self.gamepayout = False
+        self.gamepayout = False 
         self.gamepushback = False
 
         self.cardlengths = [0, 0, 0, 0]
@@ -248,10 +250,6 @@ class game_variable: # Game variables
         self.chipBetPhyiscalValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.cardHandValue = []
 
-        self.spadesImage = asset_path(f"suits/spades.png")
-        self.heartsImage = asset_path(f"suits/hearts.png")
-        self.clubsImage = asset_path(f"suits/clubs.png")
-        self.diamondsImage = asset_path(f"suits/diamonds.png")
         card_ranks = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
         self.spadesCards = tuple(asset_path(f"Carddeck/Spades/{rank}.png") for rank in card_ranks)
         self.heartsCards = tuple(asset_path(f"Carddeck/Hearts/{rank}.png") for rank in card_ranks)
@@ -677,24 +675,24 @@ class game_objects:
             GV.display.blit(buttontext2_rotated, buttontext2rect2)
         elif GV.round == 3:
             if GV.hoverButtonSquare[0]:
-                box_colour1 = GV.semi_red_colour
+                box_colour1 = GV.dark_table_colour_accent
             else:
-                box_colour1 = GV.red_colour
+                box_colour1 = GV.table_colour_accent
 
             if GV.hoverButtonSquare[1]:
-                box_colour2 = GV.semi_black_colour
+                box_colour2 = GV.dark_table_colour_accent
             else:
-                box_colour2 = GV.black_colour
+                box_colour2 = GV.table_colour_accent
 
             if GV.hoverButtonSquare[2]:
-                box_colour3 = GV.semi_black_colour
+                box_colour3 = GV.dark_table_colour_accent
             else:
-                box_colour3 = GV.black_colour
+                box_colour3 = GV.table_colour_accent
 
             if GV.hoverButtonSquare[3]:
-                box_colour4 = GV.semi_red_colour
+                box_colour4 = GV.dark_table_colour_accent
             else:
-                box_colour4 = GV.red_colour
+                box_colour4 = GV.table_colour_accent
 
             pygame.draw.rect(GV.display, box_colour1, (303, 350, 75, 75))
             pygame.draw.rect(GV.display, box_colour2, (303, 425, 75, 75))
@@ -706,22 +704,21 @@ class game_objects:
 
             pygame.draw.line(GV.display, GV.white_colour, (822, 425), (894, 425), 3)
 
+            text = GV.betFunctionSuitFont.render("♠", True, GV.black_colour)
+            textrect = text.get_rect(center=(340, 383))
+            GV.display.blit(text, textrect)
 
-            spadesuit = pygame.transform.smoothscale(pygame.image.load((GV.spadesImage)), (75, 75)).convert_alpha()
-            rect = spadesuit.get_rect(center=(340.5, 387.5))
-            GV.display.blit(spadesuit, rect)
+            text = GV.betFunctionSuitFont2.render("♥", True, GV.red_colour)
+            textrect = text.get_rect(center=(339, 458))
+            GV.display.blit(text, textrect)
 
-            heartsuit = pygame.transform.smoothscale(pygame.image.load((GV.heartsImage)), (75, 75)).convert_alpha()
-            rect = heartsuit.get_rect(center=(340.5, 462.5))
-            GV.display.blit(heartsuit, rect)
+            text = GV.betFunctionSuitFont.render("♦", True, GV.red_colour)
+            textrect = text.get_rect(center=(859, 383))
+            GV.display.blit(text, textrect)
 
-            diamondsuit = pygame.transform.smoothscale(pygame.image.load((GV.diamondsImage)), (75, 75)).convert_alpha()
-            rect = diamondsuit.get_rect(center=(859.5, 387.5))
-            GV.display.blit(diamondsuit, rect)
-
-            clubsuit = pygame.transform.smoothscale(pygame.image.load((GV.clubsImage)), (75, 75)).convert_alpha()
-            rect = clubsuit.get_rect(center=(858, 462.5))
-            GV.display.blit(clubsuit, rect)
+            text = GV.betFunctionSuitFont.render("♣", True, GV.black_colour)
+            textrect = text.get_rect(center=(859, 458))
+            GV.display.blit(text, textrect)
 
         if GV.hoverButtonCashOut and GV.chipBet and GV.round != 0:
             box_colour = GV.bright_green
