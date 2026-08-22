@@ -136,7 +136,7 @@ class game_variable: # Game variables
         self.bright_green = (109, 255, 108)
         self.yellow_green = (183, 255, 0)
         self.bright_red = (255, 49, 49)
-        self.highlight_yellow = (249, 203, 26)
+        self.highlight_yellow = (255, 230, 100)
         self.bright_blue = (14, 142, 255)
         self.bright_orange = (255, 127, 14)
         self.semi_black_colour = (60, 60, 60)
@@ -249,6 +249,8 @@ class game_variable: # Game variables
         self.chipBetValues = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.chipBetPhyiscalValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.cardHandValue = []
+
+        self.roundState = [0, 0, 0, 0]
 
         card_ranks = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
         self.spadesCards = tuple(asset_path(f"Carddeck/Spades/{rank}.png") for rank in card_ranks)
@@ -493,25 +495,82 @@ class game_objects:
         tableTextRect = tabelText.get_rect(center=(715, 238))
         GV.display.blit(tableTextRotated, tableTextRect)
 
-        tabelText = GV.tableTextFontFull.render(("2x"), True, GV.white_colour)
-        tableTextRotated = pygame.transform.rotate(tabelText, 335)
-        tableTextRect = tabelText.get_rect(center=(90, 134))
-        GV.display.blit(tableTextRotated, tableTextRect)
+        for index, value in enumerate(GV.roundState):
+            if index == 0:
 
-        tabelText = GV.tableTextFontFull.render(("3x"), True, GV.white_colour)
-        tableTextRotated = pygame.transform.rotate(tabelText, 344)
-        tableTextRect = tabelText.get_rect(center=(260, 198))
-        GV.display.blit(tableTextRotated, tableTextRect)
+                if value == 1:
+                    textcolour = GV.bright_green
+                elif value == 2:
+                    textcolour = GV.orange_colour
+                elif value == 3:
+                    textcolour = GV.bright_red
+                else:
+                    if GV.round == 0:
+                        textcolour = GV.highlight_yellow
+                    else:
+                        textcolour = GV.white_colour
 
-        tabelText = GV.tableTextFontFull.render(("4x"), True, GV.white_colour)
-        tableTextRotated = pygame.transform.rotate(tabelText, 15)
-        tableTextRect = tabelText.get_rect(center=(925, 198))
-        GV.display.blit(tableTextRotated, tableTextRect)
+                tabelText = GV.tableTextFontFull.render(("2x"), True, textcolour)
+                tableTextRotated = pygame.transform.rotate(tabelText, 335)
+                tableTextRect = tabelText.get_rect(center=(90, 134))
+                GV.display.blit(tableTextRotated, tableTextRect)
 
-        tabelText = GV.tableTextFontFull.render(("20x"), True, GV.white_colour)
-        tableTextRotated = pygame.transform.rotate(tabelText, 25)
-        tableTextRect = tabelText.get_rect(center=(1095, 130))
-        GV.display.blit(tableTextRotated, tableTextRect)
+            elif index == 1:
+
+                if value == 1:
+                    textcolour = GV.bright_green
+                elif value == 2:
+                    textcolour = GV.orange_colour
+                elif value == 3:
+                    textcolour = GV.bright_red
+                else:
+                    if GV.round == 1:
+                        textcolour = GV.highlight_yellow
+                    else:
+                        textcolour = GV.white_colour
+
+                tabelText = GV.tableTextFontFull.render(("3x"), True, textcolour)
+                tableTextRotated = pygame.transform.rotate(tabelText, 344)
+                tableTextRect = tabelText.get_rect(center=(260, 198))
+                GV.display.blit(tableTextRotated, tableTextRect)
+
+            elif index == 2:
+
+                if value == 1:
+                    textcolour = GV.bright_green
+                elif value == 2:
+                    textcolour = GV.orange_colour
+                elif value == 3:
+                    textcolour = GV.bright_red
+                else:
+                    if GV.round == 2:
+                        textcolour = GV.highlight_yellow
+                    else:
+                        textcolour = GV.white_colour
+
+                tabelText = GV.tableTextFontFull.render(("4x"), True, textcolour)
+                tableTextRotated = pygame.transform.rotate(tabelText, 15)
+                tableTextRect = tabelText.get_rect(center=(925, 198))
+                GV.display.blit(tableTextRotated, tableTextRect)
+
+            elif index == 3:
+
+                if value == 1:
+                    textcolour = GV.bright_green
+                elif value == 2:
+                    textcolour = GV.orange_colour
+                elif value == 3:
+                    textcolour = GV.bright_red
+                else:
+                    if GV.round == 3:
+                        textcolour = GV.highlight_yellow
+                    else:
+                        textcolour = GV.white_colour
+
+                tabelText = GV.tableTextFontFull.render(("20x"), True, textcolour)
+                tableTextRotated = pygame.transform.rotate(tabelText, 25)
+                tableTextRect = tabelText.get_rect(center=(1095, 130))
+                GV.display.blit(tableTextRotated, tableTextRect)
 
         if GV.chipExchangeOn:
             widthSpacing = 150/11
@@ -876,6 +935,7 @@ class game_functions():
                                 GV.game = False
                                 GV.gameHand.clear()
                                 GV.gameCardPositon.clear()
+                                GV.roundState = [0, 0, 0, 0]
 
                             GV.mouseStartPos = pygame.mouse.get_pos()
                             GV.mousePosChange = True
@@ -1024,26 +1084,33 @@ class game_functions():
 
                 if int(GV.gameHand[0][0]) in (0,3) and GV.gameButtonResult[0]:
                     GV.gamemultiplier = 2
+                    GV.roundState[0] = 1
 
                 elif int(GV.gameHand[0][0]) in (1,2) and GV.gameButtonResult[2]:
                     GV.gamemultiplier = 2
+                    GV.roundState[0] = 1
 
                 else:
                     GV.gamefail = True
+                    GV.roundState[0] = 3
 
             elif GV.round == 2: # ABOVE AND BELOW
                 GV.gameCardPositon.append(RICD(517, 260))
                 if int(GV.gameHand[1][GV.cardlengths[1]]) > int(GV.gameHand[0][GV.cardlengths[0]]) and GV.gameButtonResult[0]:
                     GV.gamemultiplier = 3
+                    GV.roundState[1] = 1
 
                 elif int(GV.gameHand[1][GV.cardlengths[1]]) < int(GV.gameHand[0][GV.cardlengths[0]]) and GV.gameButtonResult[2]:
                     GV.gamemultiplier = 3
+                    GV.roundState[1] = 1
 
                 elif int(GV.gameHand[1][GV.cardlengths[1]]) == int(GV.gameHand[0][GV.cardlengths[0]]) and (GV.gameButtonResult[0] or GV.gameButtonResult[2]):
                     GV.gamepushback = True
+                    GV.roundState[1] = 2
 
                 else:
                     GV.gamefail = True
+                    GV.roundState[1] = 3
 
             elif GV.round == 3: # INSIDE AND OUTSIDE
                 GV.gameCardPositon.append(RICD(683, 260))
@@ -1052,36 +1119,45 @@ class game_functions():
 
                 if max(GV.cardHandValue) > int(GV.gameHand[2][GV.cardlengths[2]]) > min(GV.cardHandValue) and GV.gameButtonResult[0]:
                     GV.gamemultiplier = 4
+                    GV.roundState[2] = 1
 
                 elif (int(GV.gameHand[2][GV.cardlengths[2]]) > max(GV.cardHandValue) or min(GV.cardHandValue) > int(GV.gameHand[2][GV.cardlengths[2]])) and GV.gameButtonResult[2]:
                     GV.gamemultiplier = 4
+                    GV.roundState[2] = 1
 
                 elif int(GV.gameHand[2][GV.cardlengths[2]]) in GV.cardHandValue:
                     GV.gamepushback = True
+                    GV.roundState[2] = 2
 
                 else:
                     GV.gamefail = True
+                    GV.roundState[2] = 3
 
             elif GV.round == 4: # SPADE HEART DIAMIOND CLUB
                 GV.gameCardPositon.append(RICD(850, 260))
                 if int(GV.gameHand[-1][0]) == 0 and GV.gameButtonResult[0]:
                     GV.gamemultiplier = 20
                     GV.gamepayout = True
+                    GV.roundState[3] = 1
 
                 elif int(GV.gameHand[-1][0]) == 1 and GV.gameButtonResult[1]:
                     GV.gamemultiplier = 20
                     GV.gamepayout = True
+                    GV.roundState[3] = 1
 
                 elif int(GV.gameHand[-1][0]) == 2 and GV.gameButtonResult[2]:
                     GV.gamemultiplier = 20
                     GV.gamepayout = True
+                    GV.roundState[3] = 1
 
                 elif int(GV.gameHand[-1][0]) == 3 and GV.gameButtonResult[3]:
                     GV.gamemultiplier = 20
                     GV.gamepayout = True
+                    GV.roundState[3] = 1
 
                 else:
                     GV.gamefail = True
+                    GV.roundState[3] = 3
             
             if GV.gamefail:
                 for chip in GV.chipBet:
