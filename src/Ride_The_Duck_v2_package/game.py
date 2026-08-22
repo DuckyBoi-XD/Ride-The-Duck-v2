@@ -103,7 +103,7 @@ def save_game(chip_info = None, stats = None):
 
 CHIPS, STATS = load_game()
 
-CHIPS = [0, 0, 10, 0, 0, 0, 0, 0, 0, 0]
+CHIPS = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
 
 def cosd(x):
     return math.cos(math.radians(x))
@@ -251,6 +251,7 @@ class game_variable: # Game variables
         self.cardHandValue = []
 
         self.roundState = [0, 0, 0, 0]
+        self.gameend = False
 
         self.cardSFX = pygame.mixer.Sound(asset_path("SFX/cardSFX.mp3"))
         self.chipdownSFX = pygame.mixer.Sound(asset_path("SFX/chipdownSFX.mp3"))
@@ -834,6 +835,63 @@ class game_objects:
             rect = card.get_rect(center=(cardpos))
             GV.display.blit(card, rect)
             pygame.draw.rect(GV.display, cardoutline, (rect[0]-1, rect[1]-1, 107, 142), 2, 5)
+
+    def gameEnd(self):
+            print(GV.gameend)
+            if GV.gameend:
+                rect_surface = pygame.Surface((600, 400), pygame.SRCALPHA)
+                rect_surface.set_alpha(200)
+        
+                pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, 300, 400))
+                pygame.draw.rect(rect_surface, (255, 255, 255), (0, 0, 300, 400), width=3)
+        
+                GV.display.blit(rect_surface, (450, 150))
+        
+                endgameText = GV.endgamefont.render(f"ROUNDS PLAYED:", True, GV.white_colour)
+                endgameRect = endgameText.get_rect(center=(600, 180))
+                GV.display.blit(endgameText, endgameRect)
+        
+                endgameValue = GV.endgamefont.render(f"{STATS["rounds played"]}", True, GV.white_colour)
+                endgameRect = endgameValue.get_rect(center=(600, 200))
+                GV.display.blit(endgameValue, endgameRect)
+        
+                
+                endgameText = GV.endgamefont.render(f"ROUNDS WON:", True, GV.white_colour)
+                endgameRect = endgameText.get_rect(center=(600, 235))
+                GV.display.blit(endgameText, endgameRect)
+                endgameValue = GV.endgamefont.render(f"{STATS["wins"]}", True, GV.white_colour)
+                endgameRect = endgameValue.get_rect(center=(600, 255))
+                GV.display.blit(endgameValue, endgameRect)
+        
+        
+                endgameText = GV.endgamefont.render(f"ROUNDS LOST:", True, GV.white_colour)
+                endgameRect = endgameText.get_rect(center=(600, 285))
+                GV.display.blit(endgameText, endgameRect)
+                endgameValue = GV.endgamefont.render(f"{STATS["loses"]}", True, GV.white_colour)
+                endgameRect = endgameValue.get_rect(center=(600, 305))
+                GV.display.blit(endgameValue, endgameRect)
+        
+                endgameText = GV.endgamefont.render(f"ROUNDS PUSHED BACK:", True, GV.white_colour)
+                endgameRect = endgameText.get_rect(center=(600, 410))
+                GV.display.blit(endgameText, endgameRect)
+                endgameValue = GV.endgamefont.render(f"{STATS["push back"]}", True, GV.white_colour)
+                endgameRect = endgameValue.get_rect(center=(600, 430))
+                GV.display.blit(endgameValue, endgameRect)
+        
+                endgameText = GV.endgamefont.render(f"MONEY EARNT:", True, GV.white_colour)
+                endgameRect = endgameText.get_rect(center=(600, 460))
+                GV.display.blit(endgameText, endgameRect)
+                endgameValue = GV.endgamefont.render(f"{STATS["money gained"]}", True, GV.white_colour)
+                endgameRect = endgameValue.get_rect(center=(600, 480))
+                GV.display.blit(endgameValue, endgameRect)
+
+                pygame.draw.rect(GV.display, GV.gameendHover, (500, 497, 200, 40))
+                endgameText = GV.endgamefont.render("RESTART", True, GV.highlight_yellow)
+                endgameRect = endgameText.get_rect(center=(600, 517))
+                GV.display.blit(endgameText, endgameRect)
+
+                pygame.draw.rect(GV.display, (255, 255, 255), (500, 497, 200, 40), width=1)
+
 GO = game_objects()
 
 class game_functions():
@@ -1332,6 +1390,7 @@ class pygame_function:
         GO.chip_objects()
         if GV.gameHand:
             GO.card_object()
+        GO.gameEnd()
     def on_cleanup(self):
         pygame.quit()
 
@@ -1344,6 +1403,11 @@ class pygame_function:
             GF.betting_areas()
             if GV.game:
                 GF.ride_the_duck_function()
+            print(CHIPS, GV.round)
+            if sum(CHIPS) == 0 and GV.round == 0:
+                GV.gameend = True
+            else:
+                GV.gameend = False
             self.on_render()
             pygame.display.flip()
         self.on_cleanup()
