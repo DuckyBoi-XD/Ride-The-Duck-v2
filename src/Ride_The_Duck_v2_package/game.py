@@ -252,6 +252,15 @@ class game_variable: # Game variables
 
         self.roundState = [0, 0, 0, 0]
 
+        self.cardSFX = pygame.mixer.Sound(asset_path("SFX/cardSFX.mp3"))
+        self.chipdownSFX = pygame.mixer.Sound(asset_path("SFX/chipdownSFX.mp3"))
+        self.chipupSFX = pygame.mixer.Sound(asset_path("SFX/chipupSFX.mp3"))
+        self.clickupSFX = pygame.mixer.Sound(asset_path("SFX/clickupSFX.mp3"))
+        self.clickdownSFX = pygame.mixer.Sound(asset_path("SFX/clickdownSFX.mp3"))
+        self.chipsSFX = pygame.mixer.Sound(asset_path("SFX/chipsSFX.mp3"))
+        self.loseSFX = pygame.mixer.Sound(asset_path("SFX/loseSFX.mp3"))
+        self.winSFX = pygame.mixer.Sound(asset_path("SFX/winSFX.mp3"))
+
         card_ranks = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
         self.spadesCards = tuple(asset_path(f"Carddeck/Spades/{rank}.png") for rank in card_ranks)
         self.heartsCards = tuple(asset_path(f"Carddeck/Hearts/{rank}.png") for rank in card_ranks)
@@ -837,6 +846,9 @@ class game_functions():
                     if int(list(reversed(GV.chipValues))[GV.exchangeChipSelection]) <= GV.chipExchangeValue2-GV.chipExchangeValue1:
                         if event.button == 1:
                             if GV.chipExchangehighlightOn:
+
+                                GV.clickupSFX.play(0)
+
                                 GV.chipSmallExchangeListtemp.reverse()
                                 GV.chipSmallExchangeListtemp[GV.exchangeChipSelection] += 1
                                 GV.chipSmallExchangeListtemp.reverse()
@@ -850,6 +862,9 @@ class game_functions():
                     if GV.chipExchangehighlightOn:
                         GV.chipSmallExchangeListtemp.reverse()
                         if GV.chipSmallExchangeListtemp[GV.exchangeChipSelection] > 0:
+
+                            GV.clickdownSFX.play(0)
+
                             GV.chipSmallExchangeListtemp[GV.exchangeChipSelection] -= 1
                             GV.chipExchangeValue1 = 0
 
@@ -931,6 +946,8 @@ class game_functions():
 
                         if CursorPos_CirclePos <= GV.chipRadius**2 and ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"] is False:
 
+                            GV.chipupSFX.play(0)
+
                             if GV.gamefail or GV.gamepayout or GV.gamepushback:
                                 if GV.gamefail:
                                     GV.gamefail = False
@@ -959,6 +976,8 @@ class game_functions():
                     CursorPos_CirclePos = CursorPos_CirclePosx**2 + CursorPos_CirclePosy**2
 
                     if CursorPos_CirclePos <= GV.chipRadius**2 and GV.chipExchangeValue1 == GV.chipExchangeValue2:
+
+                        GV.chipsSFX.play(0)
                         
                         for chips in GV.chipExchange:
                             CHIPS[chips[0]] -= 1
@@ -1001,6 +1020,9 @@ class game_functions():
                         save_game()
 
             if event.type == pygame.MOUSEBUTTONUP and GV.mousePosChange == True:
+
+                GV.chipdownSFX.play(0)
+
                 GV.mousePosChange = False
                 GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
                 GV.chipCurrentPos[1] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
@@ -1014,6 +1036,7 @@ class game_functions():
 
                 CursorPos_CirclePos = CursorPos_CirclePosx**2 + CursorPos_CirclePosy**2
                 if CursorPos_CirclePos <= GV.smallChipRadius**2:
+
                     GV.chipExchangeHighlight = self.smallExchangeChipPos 
                     GV.chipExchangehighlightOn = True
                     GV.exchangeChipSelection = indexexchange
@@ -1077,6 +1100,8 @@ class game_functions():
         if any(GV.gameButtonResult):
             GV.gameHand.append(GV.cardDeck[0])
             GV.cardDeck.append(GV.cardDeck[0])
+
+            GV.cardSFX.play(0)
 
             if len(GV.gameHand[-1]) == 3:
                 GV.cardlengths[(GV.round) - 1] = slice(1, 3)
@@ -1166,6 +1191,7 @@ class game_functions():
                     GV.roundState[3] = 3
             
             if GV.gamefail:
+                GV.loseSFX.play(0)
                 for chip in GV.chipBet:
                     CHIPS[chip[0]] -= 1
 
@@ -1204,6 +1230,8 @@ class game_functions():
 
         elif (GV.gamepayout or GV.gamepushback) and GV.round != 0:
             if GV.gamepayout:
+                GV.winSFX.play(0)
+                GV.chipsSFX.play(0)
 
                 GV.chipBetPhyiscalValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
