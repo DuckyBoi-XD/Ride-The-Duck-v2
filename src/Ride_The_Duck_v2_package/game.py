@@ -814,11 +814,17 @@ class game_objects:
                 value_var = int(card[1])
 
             value_var -= 2
-        
+
+            if GV.roundState[index] == 1:
+                cardoutline = GV.bright_green
+            elif GV.roundState[index] == 3:
+                cardoutline = GV.bright_red
+
             cardpos = GV.gameCardPositon[index]
             card = pygame.transform.smoothscale(pygame.image.load((GV.CardFiles[suit_var][value_var])), (105, 140)).convert_alpha()
             rect = card.get_rect(center=(cardpos))
             GV.display.blit(card, rect)
+            pygame.draw.rect(GV.display, cardoutline, (rect[0]-1, rect[1]-1, 107, 142), 2, 5)
 GO = game_objects()
 
 class game_functions():
