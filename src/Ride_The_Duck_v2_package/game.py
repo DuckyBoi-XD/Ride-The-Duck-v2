@@ -200,9 +200,14 @@ class game_variable: # Game variables
         self.tableTextFontFull = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 40)
         self.tableTextFontSemi = pygame.font.Font(asset_path("fonts/tableFont.ttf"), 25)
 
+        self.endgamefontLarge = pygame.font.Font(asset_path("fonts/endgameFont.ttf"), 30)
         self.endgamefont = pygame.font.Font(asset_path("fonts/endgameFont.ttf"), 20)
         self.endgamefontSemi = pygame.font.Font(asset_path("fonts/endgameFont.ttf"), 17)
         self.endgamefontQuat = pygame.font.Font(asset_path("fonts/endgameFont.ttf"), 15)
+
+        self.titleFont = pygame.font.Font(asset_path("fonts/titleFont.ttf"), 80)
+        self.titleFontSmall = pygame.font.Font(asset_path("fonts/titleFont.ttf"), 30)
+        self.titleFontTiny = pygame.font.Font(asset_path("fonts/titleFont.ttf"), 20)
 
         self.chipFontList = (self.threeCharFont, self.fourCharFont, self.fiveCharFont, self.sixCharFont)
         self.chipFontListSmall = (self.threeCharFontSmall, self.fourCharFontSmall, self.fiveCharFontSmall, self.sixCharFontSmall)
@@ -255,6 +260,7 @@ class game_variable: # Game variables
         self.gameend = False
         self.gameendHover = [20, 20, 20]
         self.gameRestart = False
+        self.gameStart = True
 
         self.cardSFX = pygame.mixer.Sound(asset_path("SFX/cardSFX.mp3"))
         self.chipdownSFX = pygame.mixer.Sound(asset_path("SFX/chipdownSFX.mp3"))
@@ -910,6 +916,62 @@ class game_objects:
 
             pygame.draw.rect(GV.display, (255, 255, 255), (500, 495, 200, 40), width=1)
 
+    def startScreen(self):
+
+        titleRect_surface = pygame.Surface((1200, 700), pygame.SRCALPHA)
+        titleRect_surface.set_alpha(150)
+
+        pygame.draw.rect(titleRect_surface, (0, 0, 0), (10, 10, 1180, 680))
+
+        GV.display.blit(titleRect_surface, (0, 0))
+
+        titleText = GV.titleFont.render(f"Ride The Duck", True, (255, 200, 0))
+        titleRect = titleText.get_rect(center=(550, 130))
+        GV.display.blit(titleText, titleRect)
+        titleText = GV.titleFontSmall.render(f"v2", True, (255, 200, 0))
+        titleRect = titleText.get_rect(center=(920, 160))
+        GV.display.blit(titleText, titleRect)
+        titleText = GV.titleFontTiny.render(f"Created By DuckyBoi_XD", True, (255, 200, 0))
+        titleRect = titleText.get_rect(center=(450, 200))
+        GV.display.blit(titleText, titleRect)
+
+        titleText = GV.endgamefontLarge.render(f"Current Stats:", True, (255, 200, 0))
+        titleRect = titleText.get_rect(center=(600, 270))
+        GV.display.blit(titleText, titleRect)
+
+        endgameText = GV.endgamefont.render(f"ROUNDS PLAYED: {STATS["rounds played"]}", True, GV.white_colour)
+        endgameRect = endgameText.get_rect(center=(600, 310))
+        GV.display.blit(endgameText, endgameRect)
+
+        
+        endgameText = GV.endgamefont.render(f"ROUNDS WON: {STATS["wins"]}", True, GV.white_colour)
+        endgameRect = endgameText.get_rect(center=(600, 340))
+        GV.display.blit(endgameText, endgameRect)
+
+        endgameText = GV.endgamefont.render(f"2x: {STATS["2x wins"]}      3x: {STATS["3x wins"]}      4x: {STATS["4x wins"]}      20x: {STATS["20x wins"]}", True, GV.white_colour)
+        endgameRect = endgameText.get_rect(center=(600, 380))
+        GV.display.blit(endgameText, endgameRect)               
+
+        endgameText = GV.endgamefont.render(f"ROUNDS LOST: {STATS["loses"]}", True, GV.white_colour)
+        endgameRect = endgameText.get_rect(center=(600, 420))
+        GV.display.blit(endgameText, endgameRect)
+
+        endgameText = GV.endgamefont.render(f"ROUNDS PUSHED BACK: {STATS["push back"]}", True, GV.white_colour)
+        endgameRect = endgameText.get_rect(center=(600, 450))
+        GV.display.blit(endgameText, endgameRect)
+
+        endgameText = GV.endgamefont.render(f"MONEY EARNT: {STATS["money earnt"]}", True, GV.white_colour)
+        endgameRect = endgameText.get_rect(center=(600, 480))
+        GV.display.blit(endgameText, endgameRect)
+
+        pygame.draw.rect(GV.display, GV.gameendHover, (400, 550, 400, 70), 0, 10)
+        pygame.draw.rect(GV.display, GV.white_colour, (400, 550, 400, 70), 2, 10)
+
+        endgameText = GV.endgamefontLarge.render("Start!", True, (255, 200, 0))
+        endgameRect = endgameText.get_rect(center=(600, 585))
+        GV.display.blit(endgameText, endgameRect)
+        
+
 GO = game_objects()
 
 class game_functions():
@@ -1481,6 +1543,8 @@ class pygame_function:
         if GV.gameHand:
             GO.card_object()
         GO.gameEnd()
+        if GV.gameStart:
+            GO.startScreen()
     def on_cleanup(self):
         pygame.quit()
 
