@@ -71,16 +71,16 @@ def load_game(): # access save file -JSON
             json_str = decode_save(encoded_bytes)
             data = json.loads(json_str)
             savefile_value = 1
-            return (data.get("Chips", [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-                    data.get("Stats", {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0}))
+            return (data.get("Chips", [5, 2, 1, 0, 0, 0, 0, 0, 0, 0]),
+                    data.get("Stats", {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0, "peak": 25}))
                     
     except FileNotFoundError:
         savefile_value = 2
-        return [5, 2, 1, 0, 0, 0, 0, 0, 0, 0], {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0}
+        return [5, 2, 1, 0, 0, 0, 0, 0, 0, 0], {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0, "peak": 25}
     except (ValueError, json.JSONDecodeError) as error:
         print(f"Corrupted save file - using defaults. Error: {error}")
         savefile_value = 3  
-        return [5, 2, 1, 0, 0, 0, 0, 0, 0, 0], {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0}
+        return [5, 2, 1, 0, 0, 0, 0, 0, 0, 0], {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0, "peak": 25}
 
 def save_game(chip_info = None, stats = None):
     '''saving game data'''
@@ -102,8 +102,6 @@ def save_game(chip_info = None, stats = None):
         f.write(encoded_bytes)
 
 CHIPS, STATS = load_game()
-
-CHIPS = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
 
 def cosd(x):
     return math.cos(math.radians(x))
@@ -850,73 +848,81 @@ class game_objects:
 
     def gameEnd(self):
         if GV.gameend:
-            rect_surface = pygame.Surface((600, 400), pygame.SRCALPHA)
+            rect_surface = pygame.Surface((600, 450), pygame.SRCALPHA)
             rect_surface.set_alpha(200)
     
-            pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, 300, 400))
-            pygame.draw.rect(rect_surface, (255, 255, 255), (0, 0, 300, 400), width=3)
+            pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, 300, 450))
+            pygame.draw.rect(rect_surface, (255, 255, 255), (0, 0, 300, 450), width=3)
     
-            GV.display.blit(rect_surface, (450, 150))
+            GV.display.blit(rect_surface, (450, 125))
     
             endgameText = GV.endgamefont.render(f"ROUNDS PLAYED:", True, GV.white_colour)
-            endgameRect = endgameText.get_rect(center=(600, 170))
+            endgameRect = endgameText.get_rect(center=(600, 150))
             GV.display.blit(endgameText, endgameRect)
     
             endgameValue = GV.endgamefont.render(f"{STATS["rounds played"]}", True, GV.white_colour)
-            endgameRect = endgameValue.get_rect(center=(600, 190))
+            endgameRect = endgameValue.get_rect(center=(600, 170))
             GV.display.blit(endgameValue, endgameRect)
     
             
             endgameText = GV.endgamefont.render(f"ROUNDS WON:", True, GV.white_colour)
-            endgameRect = endgameText.get_rect(center=(600, 220))
+            endgameRect = endgameText.get_rect(center=(600, 200))
             GV.display.blit(endgameText, endgameRect)
             endgameValue = GV.endgamefont.render(f"{STATS["wins"]}", True, GV.white_colour)
-            endgameRect = endgameValue.get_rect(center=(600, 240))
+            endgameRect = endgameValue.get_rect(center=(600, 220))
             GV.display.blit(endgameValue, endgameRect)
 
             endgameText = GV.endgamefontSemi.render(f"2x: {STATS["2x wins"]}", True, GV.white_colour)
-            endgameRect = endgameText.get_rect(center=(600, 265))
+            endgameRect = endgameText.get_rect(center=(600, 250))
             GV.display.blit(endgameText, endgameRect)
 
             endgameText = GV.endgamefontSemi.render(f"3x: {STATS["3x wins"]}", True, GV.white_colour)
-            endgameRect = endgameText.get_rect(center=(600, 285))
+            endgameRect = endgameText.get_rect(center=(600, 270))
             GV.display.blit(endgameText, endgameRect)
 
             endgameText = GV.endgamefontSemi.render(f"4x: {STATS["4x wins"]}", True, GV.white_colour)
-            endgameRect = endgameText.get_rect(center=(600, 305))
+            endgameRect = endgameText.get_rect(center=(600, 290))
             GV.display.blit(endgameText, endgameRect)
 
             endgameText = GV.endgamefontSemi.render(f"20x: {STATS["20x wins"]}", True, GV.white_colour)
-            endgameRect = endgameText.get_rect(center=(600, 325))
+            endgameRect = endgameText.get_rect(center=(600, 310))
             GV.display.blit(endgameText, endgameRect)                
     
             endgameText = GV.endgamefont.render(f"ROUNDS LOST:", True, GV.white_colour)
-            endgameRect = endgameText.get_rect(center=(600, 355))
+            endgameRect = endgameText.get_rect(center=(600, 340))
             GV.display.blit(endgameText, endgameRect)
             endgameValue = GV.endgamefont.render(f"{STATS["loses"]}", True, GV.white_colour)
-            endgameRect = endgameValue.get_rect(center=(600, 375))
+            endgameRect = endgameValue.get_rect(center=(600, 360))
             GV.display.blit(endgameValue, endgameRect)
     
             endgameText = GV.endgamefont.render(f"ROUNDS PUSHED BACK:", True, GV.white_colour)
-            endgameRect = endgameText.get_rect(center=(600, 405))
+            endgameRect = endgameText.get_rect(center=(600, 385))
             GV.display.blit(endgameText, endgameRect)
             endgameValue = GV.endgamefont.render(f"{STATS["push back"]}", True, GV.white_colour)
-            endgameRect = endgameValue.get_rect(center=(600, 425))
+            endgameRect = endgameValue.get_rect(center=(600, 405))
             GV.display.blit(endgameValue, endgameRect)
     
             endgameText = GV.endgamefont.render(f"MONEY EARNT:", True, GV.white_colour)
-            endgameRect = endgameText.get_rect(center=(600, 455))
+            endgameRect = endgameText.get_rect(center=(600, 430))
             GV.display.blit(endgameText, endgameRect)
             endgameValue = GV.endgamefont.render(f"{STATS["money earnt"]}", True, GV.white_colour)
-            endgameRect = endgameValue.get_rect(center=(600, 475))
+            endgameRect = endgameValue.get_rect(center=(600, 450))
             GV.display.blit(endgameValue, endgameRect)
 
-            pygame.draw.rect(GV.display, GV.gameendHover, (500, 495, 200, 40))
-            endgameText = GV.endgamefont.render("RESTART", True, GV.highlight_yellow)
-            endgameRect = endgameText.get_rect(center=(600, 515))
+            endgameText = GV.endgamefont.render(f"PEAK MONEY:", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 475))
             GV.display.blit(endgameText, endgameRect)
 
-            pygame.draw.rect(GV.display, (255, 255, 255), (500, 495, 200, 40), width=1)
+            endgameText = GV.endgamefont.render(f"{STATS["peak"]}", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 495))
+            GV.display.blit(endgameText, endgameRect)
+
+            pygame.draw.rect(GV.display, GV.gameendHover, (500, 515, 200, 40))
+            endgameText = GV.endgamefont.render("RESTART", True, GV.highlight_yellow)
+            endgameRect = endgameText.get_rect(center=(600, 535))
+            GV.display.blit(endgameText, endgameRect)
+
+            pygame.draw.rect(GV.display, (255, 255, 255), (500, 515, 200, 40), width=1)
 
     def startScreen(self):
 
@@ -937,33 +943,37 @@ class game_objects:
         titleRect = titleText.get_rect(center=(450, 200))
         GV.display.blit(titleText, titleRect)
 
-        titleText = GV.endgamefontLarge.render(f"Current Stats:", True, (255, 200, 0))
+        titleText = GV.endgamefontLarge.render(f"Current Stats:", True, (255, 190, 0))
         titleRect = titleText.get_rect(center=(600, 270))
         GV.display.blit(titleText, titleRect)
 
         endgameText = GV.endgamefont.render(f"ROUNDS PLAYED: {STATS["rounds played"]}", True, GV.white_colour)
-        endgameRect = endgameText.get_rect(center=(600, 310))
+        endgameRect = endgameText.get_rect(center=(600, 300))
         GV.display.blit(endgameText, endgameRect)
 
         
         endgameText = GV.endgamefont.render(f"ROUNDS WON: {STATS["wins"]}", True, GV.white_colour)
-        endgameRect = endgameText.get_rect(center=(600, 340))
+        endgameRect = endgameText.get_rect(center=(600, 330))
         GV.display.blit(endgameText, endgameRect)
 
         endgameText = GV.endgamefont.render(f"2x: {STATS["2x wins"]}      3x: {STATS["3x wins"]}      4x: {STATS["4x wins"]}      20x: {STATS["20x wins"]}", True, GV.white_colour)
-        endgameRect = endgameText.get_rect(center=(600, 380))
+        endgameRect = endgameText.get_rect(center=(600, 370))
         GV.display.blit(endgameText, endgameRect)               
 
         endgameText = GV.endgamefont.render(f"ROUNDS LOST: {STATS["loses"]}", True, GV.white_colour)
-        endgameRect = endgameText.get_rect(center=(600, 420))
+        endgameRect = endgameText.get_rect(center=(600, 410))
         GV.display.blit(endgameText, endgameRect)
 
         endgameText = GV.endgamefont.render(f"ROUNDS PUSHED BACK: {STATS["push back"]}", True, GV.white_colour)
-        endgameRect = endgameText.get_rect(center=(600, 450))
+        endgameRect = endgameText.get_rect(center=(600, 440))
         GV.display.blit(endgameText, endgameRect)
 
         endgameText = GV.endgamefont.render(f"MONEY EARNT: {STATS["money earnt"]}", True, GV.white_colour)
-        endgameRect = endgameText.get_rect(center=(600, 480))
+        endgameRect = endgameText.get_rect(center=(600, 470))
+        GV.display.blit(endgameText, endgameRect)
+
+        endgameText = GV.endgamefont.render(f"PEAK MONEY: {STATS["peak"]}", True, GV.white_colour)
+        endgameRect = endgameText.get_rect(center=(600, 500))
         GV.display.blit(endgameText, endgameRect)
 
         pygame.draw.rect(GV.display, GV.gameStartHover, (400, 550, 400, 70), 0, 10)
@@ -1165,7 +1175,7 @@ class game_functions():
                     GV.gamestartSFX.play(0)
 
                     CHIPS = [5, 2, 1, 0, 0, 0, 0, 0, 0, 0]
-                    STATS = {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0}
+                    STATS = {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0, "peak": 25}
 
                     if GV.gamefail:
                         GV.gamefail = False
@@ -1205,6 +1215,7 @@ class game_functions():
                     for indexa, lista in enumerate(GV.chipData):
                         for indexb, _ in enumerate(lista):
                             GV.chipDisplayPriority.append((indexa, indexb))
+                    save_game()
 
                 elif GV.gameStart:
                     if GV.gameStartVar:
@@ -1247,15 +1258,7 @@ class game_functions():
             GV.hoverButtonCashOut = False
             GV.hoverButtonSquare = [False, False, False, False]
 
-            if GV.gameend and GV.round == 0:
-                cursorPosx, cursorPosy = pygame.mouse.get_pos()
-                if 500 <= cursorPosx <= 700 and 495 <= cursorPosy <= 535:
-                    GV.gameendHover = [80, 80, 80]
-                    GV.gameRestart = True
-                else:
-                    GV.gameendHover = [20, 20, 20]
-                    GV.gameRestart = False
-            elif GV.gameStart:
+            if GV.gameStart:
                 
                 cursorPosx, cursorPosy = pygame.mouse.get_pos()
                 if 400 <= cursorPosx <= 800 and 550 <= cursorPosy <= 620:
@@ -1264,6 +1267,16 @@ class game_functions():
                 else:
                     GV.gameStartHover = [20, 20, 20]
                     GV.gameStartVar = False
+
+            elif GV.gameend and GV.round == 0:
+                cursorPosx, cursorPosy = pygame.mouse.get_pos()
+                if 500 <= cursorPosx <= 700 and 515 <= cursorPosy <= 555:
+                    GV.gameendHover = [80, 80, 80]
+                    GV.gameRestart = True
+                else:
+                    GV.gameendHover = [20, 20, 20]
+                    GV.gameRestart = False
+            
 
 
             elif 303 <= cursorPosx <= 372 and 350 <= cursorPosy <= 425:
@@ -1405,6 +1418,7 @@ class game_functions():
             if GV.gamefail:
 
                 STATS["loses"] += 1
+                STATS["rounds played"] += 1
                 GV.loseSFX.play(0)
                 for chip in GV.chipBet:
                     CHIPS[chip[0]] -= 1
@@ -1437,12 +1451,14 @@ class game_functions():
                 GV.round = 0
                 GV.chipBet.clear()
                 GV.gamemultiplier = 0
+                save_game()
 
             GV.gameButtonResult = [False, False, False, False]
             GV.cardDeck.remove(GV.cardDeck[0])
             GV.cardHandValue.clear()
 
         elif (GV.gamepayout or GV.gamepushback) and GV.round != 0:
+            STATS["rounds played"] += 1
             if GV.gamepushback:
                 STATS["push back"] += 1
 
@@ -1526,10 +1542,18 @@ class game_functions():
                     for indexb, _ in enumerate(lista):
                         GV.chipDisplayPriority.append((indexa, indexb))
 
+            totalchipammount = 0
+            for index, value in enumerate(CHIPS):
+                totalchipammount += int(GV.chipValues[index]) * value
+            if totalchipammount > STATS["peak"]:
+                STATS["peak"] = totalchipammount
+
             GV.chipBet.clear()
             GV.gamemultiplier = 0
             GV.round = 0
             GV.cardHandValue.clear()
+
+            save_game()
 
             
         
