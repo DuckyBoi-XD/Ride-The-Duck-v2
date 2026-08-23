@@ -202,6 +202,7 @@ class game_variable: # Game variables
 
         self.endgamefont = pygame.font.Font(asset_path("fonts/endgameFont.ttf"), 20)
         self.endgamefontSemi = pygame.font.Font(asset_path("fonts/endgameFont.ttf"), 17)
+        self.endgamefontQuat = pygame.font.Font(asset_path("fonts/endgameFont.ttf"), 15)
 
         self.chipFontList = (self.threeCharFont, self.fourCharFont, self.fiveCharFont, self.sixCharFont)
         self.chipFontListSmall = (self.threeCharFontSmall, self.fourCharFontSmall, self.fiveCharFontSmall, self.sixCharFontSmall)
@@ -252,6 +253,8 @@ class game_variable: # Game variables
 
         self.roundState = [0, 0, 0, 0]
         self.gameend = False
+        self.gameendHover = [20, 20, 20]
+        self.gameRestart = False
 
         self.cardSFX = pygame.mixer.Sound(asset_path("SFX/cardSFX.mp3"))
         self.chipdownSFX = pygame.mixer.Sound(asset_path("SFX/chipdownSFX.mp3"))
@@ -837,7 +840,6 @@ class game_objects:
             pygame.draw.rect(GV.display, cardoutline, (rect[0]-1, rect[1]-1, 107, 142), 2, 5)
 
     def gameEnd(self):
-            print(GV.gameend)
             if GV.gameend:
                 rect_surface = pygame.Surface((600, 400), pygame.SRCALPHA)
                 rect_surface.set_alpha(200)
@@ -848,54 +850,71 @@ class game_objects:
                 GV.display.blit(rect_surface, (450, 150))
         
                 endgameText = GV.endgamefont.render(f"ROUNDS PLAYED:", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 180))
+                endgameRect = endgameText.get_rect(center=(600, 170))
                 GV.display.blit(endgameText, endgameRect)
         
                 endgameValue = GV.endgamefont.render(f"{STATS["rounds played"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 200))
+                endgameRect = endgameValue.get_rect(center=(600, 190))
                 GV.display.blit(endgameValue, endgameRect)
         
                 
                 endgameText = GV.endgamefont.render(f"ROUNDS WON:", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 235))
+                endgameRect = endgameText.get_rect(center=(600, 220))
                 GV.display.blit(endgameText, endgameRect)
                 endgameValue = GV.endgamefont.render(f"{STATS["wins"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 255))
+                endgameRect = endgameValue.get_rect(center=(600, 240))
                 GV.display.blit(endgameValue, endgameRect)
-        
-        
-                endgameText = GV.endgamefont.render(f"ROUNDS LOST:", True, GV.white_colour)
+
+                endgameText = GV.endgamefontSemi.render(f"2x: {STATS["2x wins"]}", True, GV.white_colour)
+                endgameRect = endgameText.get_rect(center=(600, 265))
+                GV.display.blit(endgameText, endgameRect)
+
+                endgameText = GV.endgamefontSemi.render(f"3x: {STATS["3x wins"]}", True, GV.white_colour)
                 endgameRect = endgameText.get_rect(center=(600, 285))
                 GV.display.blit(endgameText, endgameRect)
+
+                endgameText = GV.endgamefontSemi.render(f"4x: {STATS["4x wins"]}", True, GV.white_colour)
+                endgameRect = endgameText.get_rect(center=(600, 305))
+                GV.display.blit(endgameText, endgameRect)
+
+                endgameText = GV.endgamefontSemi.render(f"20x: {STATS["20x wins"]}", True, GV.white_colour)
+                endgameRect = endgameText.get_rect(center=(600, 325))
+                GV.display.blit(endgameText, endgameRect)                
+        
+                endgameText = GV.endgamefont.render(f"ROUNDS LOST:", True, GV.white_colour)
+                endgameRect = endgameText.get_rect(center=(600, 355))
+                GV.display.blit(endgameText, endgameRect)
                 endgameValue = GV.endgamefont.render(f"{STATS["loses"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 305))
+                endgameRect = endgameValue.get_rect(center=(600, 375))
                 GV.display.blit(endgameValue, endgameRect)
         
                 endgameText = GV.endgamefont.render(f"ROUNDS PUSHED BACK:", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 410))
+                endgameRect = endgameText.get_rect(center=(600, 405))
                 GV.display.blit(endgameText, endgameRect)
                 endgameValue = GV.endgamefont.render(f"{STATS["push back"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 430))
+                endgameRect = endgameValue.get_rect(center=(600, 425))
                 GV.display.blit(endgameValue, endgameRect)
         
                 endgameText = GV.endgamefont.render(f"MONEY EARNT:", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 460))
+                endgameRect = endgameText.get_rect(center=(600, 455))
                 GV.display.blit(endgameText, endgameRect)
-                endgameValue = GV.endgamefont.render(f"{STATS["money gained"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 480))
+                endgameValue = GV.endgamefont.render(f"{STATS["money earnt"]}", True, GV.white_colour)
+                endgameRect = endgameValue.get_rect(center=(600, 475))
                 GV.display.blit(endgameValue, endgameRect)
 
-                pygame.draw.rect(GV.display, GV.gameendHover, (500, 497, 200, 40))
+                pygame.draw.rect(GV.display, GV.gameendHover, (500, 495, 200, 40))
                 endgameText = GV.endgamefont.render("RESTART", True, GV.highlight_yellow)
-                endgameRect = endgameText.get_rect(center=(600, 517))
+                endgameRect = endgameText.get_rect(center=(600, 515))
                 GV.display.blit(endgameText, endgameRect)
 
-                pygame.draw.rect(GV.display, (255, 255, 255), (500, 497, 200, 40), width=1)
+                pygame.draw.rect(GV.display, (255, 255, 255), (500, 495, 200, 40), width=1)
 
 GO = game_objects()
 
 class game_functions():
     def player_function(self):
+
+        global CHIPS, STATS
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 GV._running = False
@@ -1076,6 +1095,49 @@ class game_functions():
                                         GV.chipDisplayPriority.append((indexa, indexb))
 
                         save_game()
+                if GV.gameRestart and GV.gameend:
+
+                    CHIPS = [5, 2, 1, 0, 0, 0, 0, 0, 0, 0]
+                    STATS = {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0}
+
+                    if GV.gamefail:
+                        GV.gamefail = False
+                    if GV.gamepayout:
+                        GV.gamepayout = False
+                    if GV.gamepushback:
+                        GV.gamepushback = False
+                    GV.game = False
+                    GV.gameHand.clear()
+                    GV.gameCardPositon.clear()
+                    GV.round = 0
+                    GV.roundState = [0, 0, 0, 0]
+
+                    GV.gameRestart = False
+                    GV.gameend = False
+
+                    for index, _ in enumerate(GV.chipData):
+                        GV.chipData[index].clear()
+                    
+                    for index, i in enumerate(CHIPS):
+                        if i != 0:
+                            GV.offset = 5
+                            GV.offsetreal = 0
+                            GV.sideOffset = 0
+                            for _ in range(0, i):
+                                GV.sideOffset = int(str(GV.offset/350)[0]) * 5
+                                GV.offset = GV.offset - int(str(GV.offset/350)[0]) * 350
+                                GV.chipData[index].append({"value": GV.chipValues[index],
+                                                                "colour": GV.chipValueColours[index],
+                                                                "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
+                                                                "override": False,
+                                                                "outline": False,
+                                                            })
+                                GV.offset += 10
+                                GV.offsetreal += 10
+                    GV.chipDisplayPriority.clear()
+                    for indexa, lista in enumerate(GV.chipData):
+                        for indexb, _ in enumerate(lista):
+                            GV.chipDisplayPriority.append((indexa, indexb))
 
             if event.type == pygame.MOUSEBUTTONUP and GV.mousePosChange == True:
 
@@ -1113,7 +1175,17 @@ class game_functions():
             GV.hoverButtonCashOut = False
             GV.hoverButtonSquare = [False, False, False, False]
 
-            if 303 <= cursorPosx <= 372 and 350 <= cursorPosy <= 425:
+            if GV.gameend and GV.round == 0:
+                cursorPosx, cursorPosy = pygame.mouse.get_pos()
+                (500, 495, 200, 40)
+                if 500 <= cursorPosx <= 700 and 495 <= cursorPosy <= 535:
+                    GV.gameendHover = [80, 80, 80]
+                    GV.gameRestart = True
+                else:
+                    GV.gameendHover = [20, 20, 20]
+                    GV.gameRestart = False
+
+            elif 303 <= cursorPosx <= 372 and 350 <= cursorPosy <= 425:
                 GV.hoverButtonSquare = [True, False, False, False]
             elif 303 <= cursorPosx <= 372 and 425 <= cursorPosy <= 500:
                 GV.hoverButtonSquare = [False, True, False, False]
@@ -1155,6 +1227,7 @@ class game_functions():
                     GV.chipBet.remove(chip_index)
 
     def ride_the_duck_function(self):
+        global CHIPS, STATS
         if any(GV.gameButtonResult):
             GV.gameHand.append(GV.cardDeck[0])
             GV.cardDeck.append(GV.cardDeck[0])
@@ -1249,6 +1322,8 @@ class game_functions():
                     GV.roundState[3] = 3
             
             if GV.gamefail:
+
+                STATS["loses"] += 1
                 GV.loseSFX.play(0)
                 for chip in GV.chipBet:
                     CHIPS[chip[0]] -= 1
@@ -1287,7 +1362,13 @@ class game_functions():
             GV.cardHandValue.clear()
 
         elif (GV.gamepayout or GV.gamepushback) and GV.round != 0:
+            if GV.gamepushback:
+                STATS["push back"] += 1
+
             if GV.gamepayout:
+                STATS["wins"] += 1
+                STATS[f"{str(GV.gamemultiplier)}x wins"] += 1
+
                 GV.winSFX.play(0)
                 GV.chipsSFX.play(0)
 
@@ -1300,13 +1381,21 @@ class game_functions():
                         GV.chipBetValues[index] = value * GV.gamemultiplier
                         GV.chipBetPhyiscalValue[index] = (int(GV.chipValues[index])) * value * GV.gamemultiplier
 
+                chipbettedvalue = 0
+                for chip in GV.chipBet:
+                    chipbettedvalue += int(GV.chipValues[chip[0]])
+
+                for index, chip in enumerate(GV.chipBetValues):
+                    STATS["money earnt"] += (int(GV.chipValues[index]) * chip)
+                STATS["money earnt"] -= chipbettedvalue
+
+
                 for index, value in enumerate(GV.chipBetPhyiscalValue): # tries to simplify the payout
 
                     bit20 = False
                     bit4 = False
 
                     if value != 0 and index != 7 and (GV.gamemultiplier == 20 or value >= 2):
-                        print(1, value, int(GV.chipValues[index+3]))
                         if value % int(GV.chipValues[index+3]) == 0:
                             bit20 = True
                             GV.chipBetValues[index] = 0
@@ -1316,7 +1405,6 @@ class game_functions():
 
                     if not bit20:
                         if value != 0 and index != 8 and (GV.gamemultiplier >= 4 or value >= 2):
-                            print(2, value, int(GV.chipValues[index+2]))
                             if value % int(GV.chipValues[index+2]) == 0:
                                 bit20 = True
                                 GV.chipBetValues[index] = 0
@@ -1325,7 +1413,6 @@ class game_functions():
                                 bit4 = False
                     if not bit4 and not bit20:
                         if value != 0 and index != 9 and (GV.gamemultiplier >= 3 or value >= 2):
-                            print(3, value, int(GV.chipValues[index+1]))
                             if value % int(GV.chipValues[index+1]) == 0:
                                 GV.chipBetValues[index] = 0
                                 GV.chipBetValues[index+1] = int(value/int(GV.chipValues[index+1]))
@@ -1403,7 +1490,6 @@ class pygame_function:
             GF.betting_areas()
             if GV.game:
                 GF.ride_the_duck_function()
-            print(CHIPS, GV.round)
             if sum(CHIPS) == 0 and GV.round == 0:
                 GV.gameend = True
             else:
