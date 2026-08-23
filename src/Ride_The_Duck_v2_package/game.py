@@ -264,6 +264,7 @@ class game_variable: # Game variables
         self.chipsSFX = pygame.mixer.Sound(asset_path("SFX/chipsSFX.mp3"))
         self.loseSFX = pygame.mixer.Sound(asset_path("SFX/loseSFX.mp3"))
         self.winSFX = pygame.mixer.Sound(asset_path("SFX/winSFX.mp3"))
+        self.gamestartSFX = pygame.mixer.Sound(asset_path("SFX/gamestartSFX.mp3"))
 
         card_ranks = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
         self.spadesCards = tuple(asset_path(f"Carddeck/Spades/{rank}.png") for rank in card_ranks)
@@ -840,74 +841,74 @@ class game_objects:
             pygame.draw.rect(GV.display, cardoutline, (rect[0]-1, rect[1]-1, 107, 142), 2, 5)
 
     def gameEnd(self):
-            if GV.gameend:
-                rect_surface = pygame.Surface((600, 400), pygame.SRCALPHA)
-                rect_surface.set_alpha(200)
-        
-                pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, 300, 400))
-                pygame.draw.rect(rect_surface, (255, 255, 255), (0, 0, 300, 400), width=3)
-        
-                GV.display.blit(rect_surface, (450, 150))
-        
-                endgameText = GV.endgamefont.render(f"ROUNDS PLAYED:", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 170))
-                GV.display.blit(endgameText, endgameRect)
-        
-                endgameValue = GV.endgamefont.render(f"{STATS["rounds played"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 190))
-                GV.display.blit(endgameValue, endgameRect)
-        
-                
-                endgameText = GV.endgamefont.render(f"ROUNDS WON:", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 220))
-                GV.display.blit(endgameText, endgameRect)
-                endgameValue = GV.endgamefont.render(f"{STATS["wins"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 240))
-                GV.display.blit(endgameValue, endgameRect)
+        if GV.gameend:
+            rect_surface = pygame.Surface((600, 400), pygame.SRCALPHA)
+            rect_surface.set_alpha(200)
+    
+            pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, 300, 400))
+            pygame.draw.rect(rect_surface, (255, 255, 255), (0, 0, 300, 400), width=3)
+    
+            GV.display.blit(rect_surface, (450, 150))
+    
+            endgameText = GV.endgamefont.render(f"ROUNDS PLAYED:", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 170))
+            GV.display.blit(endgameText, endgameRect)
+    
+            endgameValue = GV.endgamefont.render(f"{STATS["rounds played"]}", True, GV.white_colour)
+            endgameRect = endgameValue.get_rect(center=(600, 190))
+            GV.display.blit(endgameValue, endgameRect)
+    
+            
+            endgameText = GV.endgamefont.render(f"ROUNDS WON:", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 220))
+            GV.display.blit(endgameText, endgameRect)
+            endgameValue = GV.endgamefont.render(f"{STATS["wins"]}", True, GV.white_colour)
+            endgameRect = endgameValue.get_rect(center=(600, 240))
+            GV.display.blit(endgameValue, endgameRect)
 
-                endgameText = GV.endgamefontSemi.render(f"2x: {STATS["2x wins"]}", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 265))
-                GV.display.blit(endgameText, endgameRect)
+            endgameText = GV.endgamefontSemi.render(f"2x: {STATS["2x wins"]}", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 265))
+            GV.display.blit(endgameText, endgameRect)
 
-                endgameText = GV.endgamefontSemi.render(f"3x: {STATS["3x wins"]}", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 285))
-                GV.display.blit(endgameText, endgameRect)
+            endgameText = GV.endgamefontSemi.render(f"3x: {STATS["3x wins"]}", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 285))
+            GV.display.blit(endgameText, endgameRect)
 
-                endgameText = GV.endgamefontSemi.render(f"4x: {STATS["4x wins"]}", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 305))
-                GV.display.blit(endgameText, endgameRect)
+            endgameText = GV.endgamefontSemi.render(f"4x: {STATS["4x wins"]}", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 305))
+            GV.display.blit(endgameText, endgameRect)
 
-                endgameText = GV.endgamefontSemi.render(f"20x: {STATS["20x wins"]}", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 325))
-                GV.display.blit(endgameText, endgameRect)                
-        
-                endgameText = GV.endgamefont.render(f"ROUNDS LOST:", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 355))
-                GV.display.blit(endgameText, endgameRect)
-                endgameValue = GV.endgamefont.render(f"{STATS["loses"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 375))
-                GV.display.blit(endgameValue, endgameRect)
-        
-                endgameText = GV.endgamefont.render(f"ROUNDS PUSHED BACK:", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 405))
-                GV.display.blit(endgameText, endgameRect)
-                endgameValue = GV.endgamefont.render(f"{STATS["push back"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 425))
-                GV.display.blit(endgameValue, endgameRect)
-        
-                endgameText = GV.endgamefont.render(f"MONEY EARNT:", True, GV.white_colour)
-                endgameRect = endgameText.get_rect(center=(600, 455))
-                GV.display.blit(endgameText, endgameRect)
-                endgameValue = GV.endgamefont.render(f"{STATS["money earnt"]}", True, GV.white_colour)
-                endgameRect = endgameValue.get_rect(center=(600, 475))
-                GV.display.blit(endgameValue, endgameRect)
+            endgameText = GV.endgamefontSemi.render(f"20x: {STATS["20x wins"]}", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 325))
+            GV.display.blit(endgameText, endgameRect)                
+    
+            endgameText = GV.endgamefont.render(f"ROUNDS LOST:", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 355))
+            GV.display.blit(endgameText, endgameRect)
+            endgameValue = GV.endgamefont.render(f"{STATS["loses"]}", True, GV.white_colour)
+            endgameRect = endgameValue.get_rect(center=(600, 375))
+            GV.display.blit(endgameValue, endgameRect)
+    
+            endgameText = GV.endgamefont.render(f"ROUNDS PUSHED BACK:", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 405))
+            GV.display.blit(endgameText, endgameRect)
+            endgameValue = GV.endgamefont.render(f"{STATS["push back"]}", True, GV.white_colour)
+            endgameRect = endgameValue.get_rect(center=(600, 425))
+            GV.display.blit(endgameValue, endgameRect)
+    
+            endgameText = GV.endgamefont.render(f"MONEY EARNT:", True, GV.white_colour)
+            endgameRect = endgameText.get_rect(center=(600, 455))
+            GV.display.blit(endgameText, endgameRect)
+            endgameValue = GV.endgamefont.render(f"{STATS["money earnt"]}", True, GV.white_colour)
+            endgameRect = endgameValue.get_rect(center=(600, 475))
+            GV.display.blit(endgameValue, endgameRect)
 
-                pygame.draw.rect(GV.display, GV.gameendHover, (500, 495, 200, 40))
-                endgameText = GV.endgamefont.render("RESTART", True, GV.highlight_yellow)
-                endgameRect = endgameText.get_rect(center=(600, 515))
-                GV.display.blit(endgameText, endgameRect)
+            pygame.draw.rect(GV.display, GV.gameendHover, (500, 495, 200, 40))
+            endgameText = GV.endgamefont.render("RESTART", True, GV.highlight_yellow)
+            endgameRect = endgameText.get_rect(center=(600, 515))
+            GV.display.blit(endgameText, endgameRect)
 
-                pygame.draw.rect(GV.display, (255, 255, 255), (500, 495, 200, 40), width=1)
+            pygame.draw.rect(GV.display, (255, 255, 255), (500, 495, 200, 40), width=1)
 
 GO = game_objects()
 
@@ -1096,6 +1097,8 @@ class game_functions():
 
                         save_game()
                 if GV.gameRestart and GV.gameend:
+
+                    GV.gamestartSFX.play(0)
 
                     CHIPS = [5, 2, 1, 0, 0, 0, 0, 0, 0, 0]
                     STATS = {"rounds played" : 0, "2x wins" : 0, "3x wins" : 0, "4x wins" : 0, "20x wins" : 0, "wins" : 0, "loses" : 0, "push back" : 0, "money earnt" : 0}
