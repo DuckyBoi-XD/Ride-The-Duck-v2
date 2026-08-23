@@ -1486,33 +1486,23 @@ class game_functions():
                     STATS["money earnt"] += (int(GV.chipValues[index]) * chip)
                 STATS["money earnt"] -= chipbettedvalue
 
-
                 for index, value in enumerate(GV.chipBetPhyiscalValue): # tries to simplify the payout
 
-                    bit20 = False
-                    bit4 = False
+                    tempchipvalue = 0
+                    for value in GV.chipBetPhyiscalValue:
+                        tempchipvalue += value
 
-                    if value != 0 and index != 7 and (GV.gamemultiplier == 20 or value >= 2):
-                        if value % int(GV.chipValues[index+3]) == 0:
-                            bit20 = True
-                            GV.chipBetValues[index] = 0
-                            GV.chipBetValues[index+3] = int(value/int(GV.chipValues[index+3]))
-                        else:
-                            bit20 = False
+                    if value != 0 and index != 7 and (GV.gamemultiplier == 20 or value >= 2) and value % int(GV.chipValues[index+3]) == 0:
+                        GV.chipBetValues[index] = 0
+                        GV.chipBetValues[index+3] += int(value/int(GV.chipValues[index+3]))
 
-                    if not bit20:
-                        if value != 0 and index != 8 and (GV.gamemultiplier >= 4 or value >= 2):
-                            if value % int(GV.chipValues[index+2]) == 0:
-                                bit20 = True
-                                GV.chipBetValues[index] = 0
-                                GV.chipBetValues[index+2] = int(value/int(GV.chipValues[index+2]))
-                            else:
-                                bit4 = False
-                    if not bit4 and not bit20:
-                        if value != 0 and index != 9 and (GV.gamemultiplier >= 3 or value >= 2):
-                            if value % int(GV.chipValues[index+1]) == 0:
-                                GV.chipBetValues[index] = 0
-                                GV.chipBetValues[index+1] = int(value/int(GV.chipValues[index+1]))
+                    elif value != 0 and index != 8 and (GV.gamemultiplier >= 4 or value >= 2) and value % int(GV.chipValues[index+2]) == 0:
+                        GV.chipBetValues[index] = 0
+                        GV.chipBetValues[index+2] += int(value/int(GV.chipValues[index+2]))
+
+                    elif value != 0 and index != 9 and (GV.gamemultiplier >= 3 or value >= 2) and value % int(GV.chipValues[index+1]) == 0:
+                        GV.chipBetValues[index] = 0
+                        GV.chipBetValues[index+1] += int(value/int(GV.chipValues[index+1]))
 
             for parent_index, chips in enumerate(GV.chipBetValues):
                 if GV.gamepayout:
