@@ -261,6 +261,8 @@ class game_variable: # Game variables
         self.gameendHover = [20, 20, 20]
         self.gameRestart = False
         self.gameStart = True
+        self.gameStartVar = False
+        self.gameStartHover = [20, 20, 20]
 
         self.cardSFX = pygame.mixer.Sound(asset_path("SFX/cardSFX.mp3"))
         self.chipdownSFX = pygame.mixer.Sound(asset_path("SFX/chipdownSFX.mp3"))
@@ -964,7 +966,7 @@ class game_objects:
         endgameRect = endgameText.get_rect(center=(600, 480))
         GV.display.blit(endgameText, endgameRect)
 
-        pygame.draw.rect(GV.display, GV.gameendHover, (400, 550, 400, 70), 0, 10)
+        pygame.draw.rect(GV.display, GV.gameStartHover, (400, 550, 400, 70), 0, 10)
         pygame.draw.rect(GV.display, GV.white_colour, (400, 550, 400, 70), 2, 10)
 
         endgameText = GV.endgamefontLarge.render("Start!", True, (255, 200, 0))
@@ -1204,6 +1206,11 @@ class game_functions():
                         for indexb, _ in enumerate(lista):
                             GV.chipDisplayPriority.append((indexa, indexb))
 
+                elif GV.gameStart:
+                    if GV.gameStartVar:
+                        GV.gameStart = False
+                        GV.gamestartSFX.play(0)
+
             if event.type == pygame.MOUSEBUTTONUP and GV.mousePosChange == True:
 
                 GV.chipdownSFX.play(0)
@@ -1242,13 +1249,22 @@ class game_functions():
 
             if GV.gameend and GV.round == 0:
                 cursorPosx, cursorPosy = pygame.mouse.get_pos()
-                (500, 495, 200, 40)
                 if 500 <= cursorPosx <= 700 and 495 <= cursorPosy <= 535:
                     GV.gameendHover = [80, 80, 80]
                     GV.gameRestart = True
                 else:
                     GV.gameendHover = [20, 20, 20]
                     GV.gameRestart = False
+            elif GV.gameStart:
+                
+                cursorPosx, cursorPosy = pygame.mouse.get_pos()
+                if 400 <= cursorPosx <= 800 and 550 <= cursorPosy <= 620:
+                    GV.gameStartHover = [80, 80, 80]
+                    GV.gameStartVar = True
+                else:
+                    GV.gameStartHover = [20, 20, 20]
+                    GV.gameStartVar = False
+
 
             elif 303 <= cursorPosx <= 372 and 350 <= cursorPosy <= 425:
                 GV.hoverButtonSquare = [True, False, False, False]
