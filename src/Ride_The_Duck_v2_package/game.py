@@ -1488,18 +1488,17 @@ class game_functions():
 
                 for index, value in enumerate(GV.chipBetPhyiscalValue): # tries to simplify the payout
 
-                    if value != 0 and index != 7 and (GV.gamemultiplier == 20 or value >= 2) and value % int(GV.chipValues[index+3]) == 0:
-                        print("Trigger1")
+                    print(GV.chipBetValues)
+
+                    if value != 0 and index != 7 and (GV.gamemultiplier == 20 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+3]) == 0:
                         GV.chipBetValues[index] = 0
                         GV.chipBetValues[index+3] += int(value/int(GV.chipValues[index+3]))
 
-                    elif value != 0 and index != 8 and (GV.gamemultiplier >= 4 or value >= 2) and value % int(GV.chipValues[index+2]) == 0:
-                        print("Trigger2")
+                    elif value != 0 and index != 8 and (GV.gamemultiplier >= 4 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+2]) == 0:
                         GV.chipBetValues[index] = 0
                         GV.chipBetValues[index+2] += int(value/int(GV.chipValues[index+2]))
 
-                    elif value != 0 and index != 9 and (GV.gamemultiplier >= 3 or value >= 2) and value % int(GV.chipValues[index+1]) == 0:
-                        print("Trigger3")
+                    elif value != 0 and index != 9 and (GV.gamemultiplier >= 3 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+1]) == 0:
                         GV.chipBetValues[index] = 0
                         GV.chipBetValues[index+1] += int(value/int(GV.chipValues[index+1]))
 
