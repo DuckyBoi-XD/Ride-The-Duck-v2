@@ -1525,8 +1525,6 @@ class game_functions():
 
                 for index, value in enumerate(GV.chipBetPhyiscalValue): # tries to simplify the payout
 
-                    print(GV.chipBetValues)
-
                     if value != 0 and index != 7 and (GV.gamemultiplier == 20 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+3]) == 0:
                         GV.chipBetValues[index] = 0
                         GV.chipBetValues[index+3] += int(value/int(GV.chipValues[index+3]))
@@ -1594,7 +1592,6 @@ class pygame_function:
         self.FPS = pygame.time.Clock()
         self.display = None
         GV._running = True
-        print(GV.chipExchangePosChordsOutline2)
 
     def on_init(self):
         pygame.init()
