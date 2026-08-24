@@ -261,6 +261,7 @@ class game_variable: # Game variables
         self.gameStart = True
         self.gameStartVar = False
         self.gameStartHover = [20, 20, 20]
+        self.shortcut = [False, False] # exchange betting
 
         self.cardSFX = pygame.mixer.Sound(asset_path("SFX/cardSFX.mp3"))
         self.chipdownSFX = pygame.mixer.Sound(asset_path("SFX/chipdownSFX.mp3"))
@@ -993,6 +994,20 @@ class game_functions():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 GV._running = False
+            if event.type == pygame.KEYDOWN:
+                if event.unicode == 'z':
+                    GV.shortcut[0] = True
+                    GV.shortcut[1] = False
+                elif event.unicode == 'x':
+                    GV.shortcut[0] = False
+                    GV.shortcut[1] = True
+
+            if event.type == pygame.KEYUP:
+                if event.unicode == 'z':
+                    GV.shortcut[0] = False
+                elif event.unicode == 'x':
+                    GV.shortcut[1] = False
+    
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if int(list(reversed(GV.chipValues))[GV.exchangeChipSelection]) < GV.chipExchangeValue2 or (int(list(reversed(GV.chipValues))[GV.exchangeChipSelection]) == GV.chipExchangeValue2 and len(GV.chipExchange)!= 1):
                     if int(list(reversed(GV.chipValues))[GV.exchangeChipSelection]) <= GV.chipExchangeValue2-GV.chipExchangeValue1:
@@ -1112,10 +1127,32 @@ class game_functions():
                                 GV.gameCardPositon.clear()
                                 GV.roundState = [0, 0, 0, 0]
 
-                            GV.mouseStartPos = pygame.mouse.get_pos()
-                            GV.mousePosChange = True
-                            GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
-                            GV.chipCurrentPos[1] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
+                            if GV.shortcut[0] or GV.shortcut[1]:
+                                if GV.shortcut[0]:
+                                    (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = random.randint(425, 775)
+                                    (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = random.randint(400, 450)
+
+                                elif GV.shortcut[1]:
+
+                                    while True:
+                                        position = random.choice(GV.chipExchangePosChords2)
+                                        if 101 <= position[1] and 700 <= position[0] <= 1100 :
+                                            break
+                                        else:
+                                            continue
+                                        
+                                    positionChangeX = random.randint(700, int(position[0]))
+                                    positionChangeY = random.randint(50, int(position[1]) - 50)
+
+                                    (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = positionChangeX
+                                    (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = positionChangeY
+
+
+                            else:
+                                GV.mouseStartPos = pygame.mouse.get_pos()
+                                GV.mousePosChange = True
+                                GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
+                                GV.chipCurrentPos[1] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
 
                             GV.chipDisplayPriority.remove(self.index_var)
                             GV.chipDisplayPriority.append(self.index_var)
@@ -1557,6 +1594,7 @@ class pygame_function:
         self.FPS = pygame.time.Clock()
         self.display = None
         GV._running = True
+        print(GV.chipExchangePosChordsOutline2)
 
     def on_init(self):
         pygame.init()
