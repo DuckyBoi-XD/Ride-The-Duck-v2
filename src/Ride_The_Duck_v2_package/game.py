@@ -262,6 +262,7 @@ class game_variable: # Game variables
         self.gameStartVar = False
         self.gameStartHover = [20, 20, 20]
         self.shortcut = [False, False] # exchange betting
+        self.CMDhold = False
 
         self.cardSFX = pygame.mixer.Sound(asset_path("SFX/cardSFX.mp3"))
         self.chipdownSFX = pygame.mixer.Sound(asset_path("SFX/chipdownSFX.mp3"))
@@ -993,6 +994,7 @@ class game_functions():
 
         global CHIPS, STATS
         for event in pygame.event.get():
+            print(event)
             if event.type == pygame.QUIT:
                 GV._running = False
             if event.type == pygame.KEYDOWN:
@@ -1002,12 +1004,22 @@ class game_functions():
                 elif event.unicode == 'x':
                     GV.shortcut[0] = False
                     GV.shortcut[1] = True
+                
 
             if event.type == pygame.KEYUP:
                 if event.unicode == 'z':
                     GV.shortcut[0] = False
                 elif event.unicode == 'x':
                     GV.shortcut[1] = False
+
+            if event.type == pygame.KEYDOWN and event.unicode == "r":
+                ((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"] = ((GV.chipData[self.index_var[0]])[self.index_var[1]])["previous position"].copy()
+            if event.type == pygame.KEYDOWN and event.scancode == 227:
+                GV.CMDhold = True
+            else:
+                GV.CMDhold = False
+
+                
     
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if int(list(reversed(GV.chipValues))[GV.exchangeChipSelection]) < GV.chipExchangeValue2 or (int(list(reversed(GV.chipValues))[GV.exchangeChipSelection]) == GV.chipExchangeValue2 and len(GV.chipExchange)!= 1):
@@ -1635,7 +1647,6 @@ class pygame_function:
                 GV.gameend = True
             else:
                 GV.gameend = False
-            print(GV.chipData)
             self.on_render()
             pygame.display.flip()
         self.on_cleanup()
