@@ -315,6 +315,7 @@ class game_variable: # Game variables
                                                  "position": [((self.chipStartPositions)[self.chipValues[index]])[0] - self.sideOffset, ((self.chipStartPositions[self.chipValues[index]])[1] - self.offset)],
                                                  "override": False,
                                                  "outline": False,
+                                                 "previous position": [],
                                                 })
                     self.offset += 10
                     self.offsetreal += 10
@@ -1128,7 +1129,9 @@ class game_functions():
                                 GV.roundState = [0, 0, 0, 0]
 
                             if GV.shortcut[0] or GV.shortcut[1]:
+                                ((GV.chipData[self.index_var[0]])[self.index_var[1]])["previous position"] = ((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"].copy()
                                 if GV.shortcut[0]:
+
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = random.randint(425, 775)
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = random.randint(400, 450)
 
@@ -1140,7 +1143,7 @@ class game_functions():
                                             break
                                         else:
                                             continue
-                                        
+                                         
                                     positionChangeX = random.randint(700, int(position[0]))
                                     positionChangeY = random.randint(50, int(position[1]) - 50)
 
@@ -1151,6 +1154,9 @@ class game_functions():
                             else:
                                 GV.mouseStartPos = pygame.mouse.get_pos()
                                 GV.mousePosChange = True
+
+                                ((GV.chipData[self.index_var[0]])[self.index_var[1]])["previous position"] = ((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"].copy()
+                                
                                 GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
                                 GV.chipCurrentPos[1] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
 
@@ -1191,6 +1197,7 @@ class game_functions():
                                                                     "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
                                                                     "override": False,
                                                                     "outline": False,
+                                                                    "previous position": [],
                                                                 })
                                     GV.offset += 10
                                     GV.offsetreal += 10 
@@ -1245,6 +1252,7 @@ class game_functions():
                                                                 "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
                                                                 "override": False,
                                                                 "outline": False,
+                                                                "previous position": [],
                                                             })
                                 GV.offset += 10
                                 GV.offsetreal += 10
@@ -1288,6 +1296,7 @@ class game_functions():
             if not ((GV.chipData[self.index_var[0]])[self.index_var[1]])["override"]:
                 GV.hoverButtonSquare = [False, False, False, False]
                 GV.hoverButtonCashOut = False
+
                 (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = pygame.mouse.get_pos()[0] - GV.mouseStartPos[0] + GV.chipCurrentPos[0]
                 (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = pygame.mouse.get_pos()[1] - GV.mouseStartPos[1] + GV.chipCurrentPos[1]
         else:
@@ -1476,6 +1485,7 @@ class game_functions():
                                                                 "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
                                                                 "override": False,
                                                                 "outline": False,
+                                                                "previous position": [],
                                                             })
                                 GV.offset += 10
                                 GV.offsetreal += 10
@@ -1557,6 +1567,7 @@ class game_functions():
                                                             "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
                                                             "override": False,
                                                             "outline": False,
+                                                            "previous position": [],
                                                         })
                             GV.offset += 10
                             GV.offsetreal += 10
@@ -1624,6 +1635,7 @@ class pygame_function:
                 GV.gameend = True
             else:
                 GV.gameend = False
+            print(GV.chipData)
             self.on_render()
             pygame.display.flip()
         self.on_cleanup()
