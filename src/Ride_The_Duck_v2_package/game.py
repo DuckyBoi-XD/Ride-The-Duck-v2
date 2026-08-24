@@ -317,7 +317,7 @@ class game_variable: # Game variables
                                                  "override": False,
                                                  "outline": False,
                                                  "previous position": [],
-                                                 "redo priority": [False, 0]
+                                                 "redo priority": [False, 0],
                                                 })
                     self.offset += 10
                     self.offsetreal += 10
@@ -1015,7 +1015,7 @@ class game_functions():
             if event.type == pygame.KEYDOWN and event.unicode == "r":
                 for indexa, list_var in enumerate(GV.chipData):
                     for indexb, values in enumerate(list_var):
-                        if values["redo priority"][0]:
+                        if values["redo priority"][0] and not values["override"]:
                             ((GV.chipData[indexa])[indexb])["position"] = ((GV.chipData[indexa])[indexb])["previous position"].copy()
 
                             GV.chipDisplayPriority.remove((indexa, indexb))
@@ -1232,6 +1232,7 @@ class game_functions():
                                                                     "override": False,
                                                                     "outline": False,
                                                                     "previous position": [],
+                                                                    "redo priority": [False, 0],
                                                                 })
                                     GV.offset += 10
                                     GV.offsetreal += 10 
@@ -1287,6 +1288,7 @@ class game_functions():
                                                                 "override": False,
                                                                 "outline": False,
                                                                 "previous position": [],
+                                                                "redo priority": [False, 0],
                                                             })
                                 GV.offset += 10
                                 GV.offsetreal += 10
@@ -1520,6 +1522,7 @@ class game_functions():
                                                                 "override": False,
                                                                 "outline": False,
                                                                 "previous position": [],
+                                                                "redo priority": [False, 0],
                                                             })
                                 GV.offset += 10
                                 GV.offsetreal += 10
@@ -1602,6 +1605,7 @@ class game_functions():
                                                             "override": False,
                                                             "outline": False,
                                                             "previous position": [],
+                                                            "redo priority": [False, 0],
                                                         })
                             GV.offset += 10
                             GV.offsetreal += 10
