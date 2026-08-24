@@ -317,6 +317,7 @@ class game_variable: # Game variables
                                                  "override": False,
                                                  "outline": False,
                                                  "previous position": [],
+                                                 "redo priority": [False, 0]
                                                 })
                     self.offset += 10
                     self.offsetreal += 10
@@ -994,7 +995,6 @@ class game_functions():
 
         global CHIPS, STATS
         for event in pygame.event.get():
-            print(event)
             if event.type == pygame.QUIT:
                 GV._running = False
             if event.type == pygame.KEYDOWN:
@@ -1013,7 +1013,14 @@ class game_functions():
                     GV.shortcut[1] = False
 
             if event.type == pygame.KEYDOWN and event.unicode == "r":
-                ((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"] = ((GV.chipData[self.index_var[0]])[self.index_var[1]])["previous position"].copy()
+                print("TRIEEGER")
+                for indexa, list_var in enumerate(GV.chipData):
+                    for indexb, values in enumerate(list_var):
+                        if values["redo priority"][0]:
+                            ((GV.chipData[indexa])[indexb])["position"] = ((GV.chipData[indexa])[indexb])["previous position"].copy()
+
+                            GV.chipDisplayPriority.remove((indexa, indexb))
+                            GV.chipDisplayPriority.insert((((GV.chipData[indexa])[indexb])["redo priority"])[1], (indexa, indexb))
             if event.type == pygame.KEYDOWN and event.scancode == 227:
                 GV.CMDhold = True
             else:
@@ -1161,6 +1168,16 @@ class game_functions():
 
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = positionChangeX
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = positionChangeY
+
+                                for indexa, list_var in enumerate(GV.chipData):
+                                    for indexb, value in enumerate(list_var):
+                                        ((GV.chipData[indexa])[indexb])["redo priority"] = [False, 0]
+
+                                for indexx, value in enumerate(GV.chipDisplayPriority):
+                                    if value == (self.index_var[0], self.index_var[1]):
+                                        print(self.index_var[0], self.index_var[1])
+                                        (((GV.chipData[self.index_var[0]])[self.index_var[1]])["redo priority"]) = [True, indexx]
+                                print(GV.chipData)
 
 
                             else:
