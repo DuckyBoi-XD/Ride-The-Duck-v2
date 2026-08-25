@@ -1022,20 +1022,15 @@ class game_functions():
 
                 GV.chipChangeHistory.reverse()
 
-                print(GV.chipChangeHistory)
-
                 chipPOS = (GV.chipChangeHistory[0])[0]
                 chipIndex = (GV.chipChangeHistory[0])[1]
 
                 (GV.chipData[chipIndex[0]])[chipIndex[1]]["position"] = chipPOS
                 GV.chipDisplayPriority.remove(chipIndex)
 
-                print((GV.chipData[chipIndex[0]])[chipIndex[1]]["redo priority"], chipIndex)
                 GV.chipDisplayPriority.insert((GV.chipData[chipIndex[0]])[chipIndex[1]]["redo priority"], chipIndex)
-
                 GV.chipChangeHistory.pop(0)
 
-                print(GV.chipChangeHistory)
                 GV.chipChangeHistory.reverse()
                 
                 
@@ -1187,7 +1182,6 @@ class game_functions():
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = positionChangeX
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = positionChangeY
 
-                                print(GV.chipDisplayPriority)
                                 for index, chipindex in enumerate(GV.chipDisplayPriority):
                                     if chipindex == (self.index_var[0], self.index_var[1]):
                                         ((GV.chipData[self.index_var[0]])[self.index_var[1]])["redo priority"] = index
