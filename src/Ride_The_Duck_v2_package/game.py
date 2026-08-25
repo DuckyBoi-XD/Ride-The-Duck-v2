@@ -320,7 +320,7 @@ class game_variable: # Game variables
                                                  "override": False,
                                                  "outline": False,
                                                  "previous position": [],
-                                                 "redo priority": 0,
+                                                 "redo priority": None,
                                                 })
                     self.offset += 10
                     self.offsetreal += 10
@@ -1015,23 +1015,28 @@ class game_functions():
                 elif event.unicode == 'x':
                     GV.shortcut[1] = False
 
-            if event.type == pygame.KEYDOWN and event.unicode == "z" and GV.chipChangeHistory:
+            if event.type == pygame.KEYDOWN and event.unicode == "z" and GV.chipChangeHistory and GV.CMDhold:
 
                 GV.chipChangeHistory.reverse()
                 
                 chipPOS = (GV.chipChangeHistory[0])[0]
                 chipIndex = (GV.chipChangeHistory[0])[1]
 
-                (GV.chipData[chipIndex[0]])[chipIndex[1]]["position"] = chipPOS
+                if not ((GV.chipData[chipIndex[0]])[chipIndex[1]])["override"]:
 
-                GV.chipChangeHistory.pop(0)
+                    (GV.chipData[chipIndex[0]])[chipIndex[1]]["position"] = chipPOS
+                    GV.chipDisplayPriority.remove(chipIndex)
+
+                    GV.chipDisplayPriority.insert((GV.chipData[chipIndex[0]])[chipIndex[1]]["redo priority"], chipIndex)
+
+                    GV.chipChangeHistory.pop(0)
 
                 GV.chipChangeHistory.reverse()
                 
                 
             if event.type == pygame.KEYDOWN and event.scancode == 227:
                 GV.CMDhold = True
-            else:
+            elif event.type == pygame.KEYUP and event.scancode == 227:
                 GV.CMDhold = False
 
                 
@@ -1177,6 +1182,13 @@ class game_functions():
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = positionChangeX
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = positionChangeY
 
+                                print(GV.chipDisplayPriority)
+                                for index, chipindex in enumerate(GV.chipDisplayPriority):
+                                    print(chipindex, (self.index_var[0], self.index_var[1]))
+                                    if chipindex == (self.index_var[0], self.index_var[1]):
+                                        ((GV.chipData[self.index_var[0]])[self.index_var[1]])["redo priority"] = index
+
+            
                                 GV.chipChangeHistory.append((((GV.chipData[self.index_var[0]])[self.index_var[1]])["previous position"].copy(), (self.index_var[0], self.index_var[1])))
 
 
@@ -1211,7 +1223,10 @@ class game_functions():
 
                         GV.chipsSFX.play(0)
                         GV.chipChangeHistory.clear()
-                        
+                        for indexa, chiplist in enumerate(GV.chipData):
+                            for indexb, _ in enumerate(chiplist):
+                                ((GV.chipData[indexa])[indexb])["redo priority"] = None
+
                         for chips in GV.chipExchange:
                             CHIPS[chips[0]] -= 1
                         GV.chipExchange.clear()
@@ -1236,7 +1251,7 @@ class game_functions():
                                                                     "override": False,
                                                                     "outline": False,
                                                                     "previous position": [],
-                                                                    "redo priority": 0,
+                                                                    "redo priority": None,
                                                                 })
                                     GV.offset += 10
                                     GV.offsetreal += 10 
@@ -1249,8 +1264,8 @@ class game_functions():
                         GV.chipDisplayPriority.clear()
 
                         for indexa, lista in enumerate(GV.chipData):
-                                    for indexb, value in enumerate(lista):
-                                        GV.chipDisplayPriority.append((indexa, indexb))
+                            for indexb, value in enumerate(lista):
+                                GV.chipDisplayPriority.append((indexa, indexb))
 
                         save_game()
                 if GV.gameRestart and GV.gameend:
@@ -1292,7 +1307,7 @@ class game_functions():
                                                                 "override": False,
                                                                 "outline": False,
                                                                 "previous position": [],
-                                                                "redo priority": 0,
+                                                                "redo priority": None,
                                                             })
                                 GV.offset += 10
                                 GV.offsetreal += 10
@@ -1526,7 +1541,7 @@ class game_functions():
                                                                 "override": False,
                                                                 "outline": False,
                                                                 "previous position": [],
-                                                                "redo priority": 0,
+                                                                "redo priority": None,
                                                             })
                                 GV.offset += 10
                                 GV.offsetreal += 10
@@ -1612,7 +1627,7 @@ class game_functions():
                                                             "override": False,
                                                             "outline": False,
                                                             "previous position": [],
-                                                            "redo priority": 0,
+                                                            "redo priority": None,
                                                         })
                             GV.offset += 10
                             GV.offsetreal += 10
