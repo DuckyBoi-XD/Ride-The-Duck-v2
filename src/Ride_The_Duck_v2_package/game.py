@@ -264,6 +264,8 @@ class game_variable: # Game variables
         self.shortcut = [False, False] # exchange betting
         self.CMDhold = False
 
+        self.chipChangeHistory = []
+
         self.cardSFX = pygame.mixer.Sound(asset_path("SFX/cardSFX.mp3"))
         self.chipdownSFX = pygame.mixer.Sound(asset_path("SFX/chipdownSFX.mp3"))
         self.chipupSFX = pygame.mixer.Sound(asset_path("SFX/chipupSFX.mp3"))
@@ -273,6 +275,7 @@ class game_variable: # Game variables
         self.loseSFX = pygame.mixer.Sound(asset_path("SFX/loseSFX.mp3"))
         self.winSFX = pygame.mixer.Sound(asset_path("SFX/winSFX.mp3"))
         self.gamestartSFX = pygame.mixer.Sound(asset_path("SFX/gamestartSFX.mp3"))
+        self.quackSFX = pygame.mixer.Sound(asset_path("SFX/quackSFX.mp3"))
 
         card_ranks = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
         self.spadesCards = tuple(asset_path(f"Carddeck/Spades/{rank}.png") for rank in card_ranks)
@@ -317,7 +320,7 @@ class game_variable: # Game variables
                                                  "override": False,
                                                  "outline": False,
                                                  "previous position": [],
-                                                 "redo priority": [False, 0],
+                                                 "redo priority": 0,
                                                 })
                     self.offset += 10
                     self.offsetreal += 10
@@ -685,7 +688,7 @@ class game_objects:
             GV.display.blit(exchangeValueText, exchangeValueTextRect)
 
             exchangeValueText = GV.exchangeFontFull.render(GV.chipExchangeStr1, True, GV.white_colour)
-            exchangeValueTextRect = exchangeValueText.get_rect(center=(440, 85))
+            exchangeValueTextRect = exchangeValueText.get_rect(center=(440, 85))    
             GV.display.blit(exchangeValueText, exchangeValueTextRect)
 
             if GV.chipExchangeValue1 == GV.chipExchangeValue2:
@@ -1012,14 +1015,20 @@ class game_functions():
                 elif event.unicode == 'x':
                     GV.shortcut[1] = False
 
-            if event.type == pygame.KEYDOWN and event.unicode == "r":
-                for indexa, list_var in enumerate(GV.chipData):
-                    for indexb, values in enumerate(list_var):
-                        if values["redo priority"][0] and not values["override"]:
-                            ((GV.chipData[indexa])[indexb])["position"] = ((GV.chipData[indexa])[indexb])["previous position"].copy()
+            if event.type == pygame.KEYDOWN and event.unicode == "z" and GV.chipChangeHistory:
 
-                            GV.chipDisplayPriority.remove((indexa, indexb))
-                            GV.chipDisplayPriority.insert((((GV.chipData[indexa])[indexb])["redo priority"])[1], (indexa, indexb))
+                GV.chipChangeHistory.reverse()
+                
+                chipPOS = (GV.chipChangeHistory[0])[0]
+                chipIndex = (GV.chipChangeHistory[0])[1]
+
+                (GV.chipData[chipIndex[0]])[chipIndex[1]]["position"] = chipPOS
+
+                GV.chipChangeHistory.pop(0)
+
+                GV.chipChangeHistory.reverse()
+                
+                
             if event.type == pygame.KEYDOWN and event.scancode == 227:
                 GV.CMDhold = True
             else:
@@ -1168,13 +1177,7 @@ class game_functions():
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0] = positionChangeX
                                     (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1] = positionChangeY
 
-                                for indexa, list_var in enumerate(GV.chipData):
-                                    for indexb, value in enumerate(list_var):
-                                        ((GV.chipData[indexa])[indexb])["redo priority"] = [False, 0]
-
-                                for indexx, value in enumerate(GV.chipDisplayPriority):
-                                    if value == (self.index_var[0], self.index_var[1]):
-                                        (((GV.chipData[self.index_var[0]])[self.index_var[1]])["redo priority"]) = [True, indexx]
+                                GV.chipChangeHistory.append((((GV.chipData[self.index_var[0]])[self.index_var[1]])["previous position"].copy(), (self.index_var[0], self.index_var[1])))
 
 
                             else:
@@ -1207,6 +1210,7 @@ class game_functions():
                     if CursorPos_CirclePos <= GV.chipRadius**2 and GV.chipExchangeValue1 == GV.chipExchangeValue2:
 
                         GV.chipsSFX.play(0)
+                        GV.chipChangeHistory.clear()
                         
                         for chips in GV.chipExchange:
                             CHIPS[chips[0]] -= 1
@@ -1232,7 +1236,7 @@ class game_functions():
                                                                     "override": False,
                                                                     "outline": False,
                                                                     "previous position": [],
-                                                                    "redo priority": [False, 0],
+                                                                    "redo priority": 0,
                                                                 })
                                     GV.offset += 10
                                     GV.offsetreal += 10 
@@ -1288,7 +1292,7 @@ class game_functions():
                                                                 "override": False,
                                                                 "outline": False,
                                                                 "previous position": [],
-                                                                "redo priority": [False, 0],
+                                                                "redo priority": 0,
                                                             })
                                 GV.offset += 10
                                 GV.offsetreal += 10
@@ -1522,7 +1526,7 @@ class game_functions():
                                                                 "override": False,
                                                                 "outline": False,
                                                                 "previous position": [],
-                                                                "redo priority": [False, 0],
+                                                                "redo priority": 0,
                                                             })
                                 GV.offset += 10
                                 GV.offsetreal += 10
@@ -1549,6 +1553,9 @@ class game_functions():
             if GV.gamepayout:
                 STATS["wins"] += 1
                 STATS[f"{str(GV.gamemultiplier)}x wins"] += 1
+
+                if GV.gamemultiplier == 20:
+                    GV.quackSFX.play(0, 3000)
 
                 GV.winSFX.play(0)
                 GV.chipsSFX.play(0)
@@ -1605,7 +1612,7 @@ class game_functions():
                                                             "override": False,
                                                             "outline": False,
                                                             "previous position": [],
-                                                            "redo priority": [False, 0],
+                                                            "redo priority": 0,
                                                         })
                             GV.offset += 10
                             GV.offsetreal += 10
