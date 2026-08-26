@@ -1028,7 +1028,8 @@ class game_functions():
                 (GV.chipData[chipIndex[0]])[chipIndex[1]]["position"] = chipPOS
                 GV.chipDisplayPriority.remove(chipIndex)
 
-                GV.chipDisplayPriority.insert((GV.chipData[chipIndex[0]])[chipIndex[1]]["redo priority"], chipIndex)
+                print((GV.chipData[chipIndex[0]])[chipIndex[1]])
+                GV.chipDisplayPriority.insert(((GV.chipData[chipIndex[0]])[chipIndex[1]])["redo priority"], chipIndex)
                 GV.chipChangeHistory.pop(0)
 
                 GV.chipChangeHistory.reverse()
@@ -1196,13 +1197,11 @@ class game_functions():
 
                                 ((GV.chipData[self.index_var[0]])[self.index_var[1]])["previous position"] = ((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"].copy()
 
-                                for indexa, list_var in enumerate(GV.chipData):
-                                    for indexb, value in enumerate(list_var):
-                                        ((GV.chipData[indexa])[indexb])["redo priority"] = [False, 0]
+                                for index, chipindex in enumerate(GV.chipDisplayPriority):
+                                    if chipindex == (self.index_var[0], self.index_var[1]):
+                                        ((GV.chipData[self.index_var[0]])[self.index_var[1]])["redo priority"] = index
 
-                                for indexx, value in enumerate(GV.chipDisplayPriority):
-                                    if value == (self.index_var[0], self.index_var[1]):
-                                        (((GV.chipData[self.index_var[0]])[self.index_var[1]])["redo priority"]) = [True, indexx]
+                                GV.chipChangeHistory.append((((GV.chipData[self.index_var[0]])[self.index_var[1]])["previous position"].copy(), (self.index_var[0], self.index_var[1])))
 
                                 GV.chipCurrentPos[0] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[0]
                                 GV.chipCurrentPos[1] = (((GV.chipData[self.index_var[0]])[self.index_var[1]])["position"])[1]
