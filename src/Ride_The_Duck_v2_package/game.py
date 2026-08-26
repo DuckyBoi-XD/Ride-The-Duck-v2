@@ -1575,7 +1575,7 @@ class game_functions():
                 STATS[f"{str(GV.gamemultiplier)}x wins"] += 1
 
                 if GV.gamemultiplier == 20:
-                    GV.quackSFX.play(0, 3000)
+                    GV.quackSFX.play(0, 1500)
 
                 GV.winSFX.play(0)
                 GV.chipsSFX.play(0)
