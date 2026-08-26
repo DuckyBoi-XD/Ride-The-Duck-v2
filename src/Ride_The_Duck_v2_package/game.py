@@ -1016,23 +1016,25 @@ class game_functions():
                     GV.shortcut[1] = False
 
             if event.type == pygame.KEYDOWN and event.unicode == "z" and GV.chipChangeHistory and GV.CMDhold:
-                for index, value in enumerate(GV.chipChangeHistory):
+                for value in GV.chipChangeHistory.copy():
+                    print([(value[1])[0]], [(value[1])[1]])
                     if ((GV.chipData[(value[1])[0]])[(value[1])[1]])["override"]:
-                        GV.chipChangeHistory.pop(index)
+                        GV.chipChangeHistory.remove(value)
+                if GV.chipChangeHistory:
 
-                GV.chipChangeHistory.reverse()
+                    GV.chipChangeHistory.reverse()
 
-                chipPOS = (GV.chipChangeHistory[0])[0]
-                chipIndex = (GV.chipChangeHistory[0])[1]
+                    chipPOS = (GV.chipChangeHistory[0])[0]
+                    chipIndex = (GV.chipChangeHistory[0])[1]
 
-                (GV.chipData[chipIndex[0]])[chipIndex[1]]["position"] = chipPOS
-                GV.chipDisplayPriority.remove(chipIndex)
+                    (GV.chipData[chipIndex[0]])[chipIndex[1]]["position"] = chipPOS
+                    GV.chipDisplayPriority.remove(chipIndex)
 
-                print((GV.chipData[chipIndex[0]])[chipIndex[1]])
-                GV.chipDisplayPriority.insert(((GV.chipData[chipIndex[0]])[chipIndex[1]])["redo priority"], chipIndex)
-                GV.chipChangeHistory.pop(0)
+                    print((GV.chipData[chipIndex[0]])[chipIndex[1]])
+                    GV.chipDisplayPriority.insert(((GV.chipData[chipIndex[0]])[chipIndex[1]])["redo priority"], chipIndex)
+                    GV.chipChangeHistory.pop(0)
 
-                GV.chipChangeHistory.reverse()
+                    GV.chipChangeHistory.reverse()
                 
                 
             if event.type == pygame.KEYDOWN and event.scancode == 227:
