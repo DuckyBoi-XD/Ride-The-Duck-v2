@@ -1401,20 +1401,22 @@ class game_functions():
 
     def starting_function(self):
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.QUIT:
+                GV._running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if GV.gameStart:
                     if GV.gameStartVar:
                         GV.gameStart = False
                         GV.gamestartSFX.play(0)
 
-        if GV.gameStart:         
-            cursorPosx, cursorPosy = pygame.mouse.get_pos()
-            if 400 <= cursorPosx <= 800 and 550 <= cursorPosy <= 620:
-                GV.gameStartHover = [80, 80, 80]
-                GV.gameStartVar = True
-            else:
-                GV.gameStartHover = [20, 20, 20]
-                GV.gameStartVar = False
+            if GV.gameStart:         
+                cursorPosx, cursorPosy = pygame.mouse.get_pos()
+                if 400 <= cursorPosx <= 800 and 550 <= cursorPosy <= 620:
+                    GV.gameStartHover = [80, 80, 80]
+                    GV.gameStartVar = True
+                else:
+                    GV.gameStartHover = [20, 20, 20]
+                    GV.gameStartVar = False
 
     def betting_areas(self):
         for chip_index in reversed(GV.chipDisplayPriority):
