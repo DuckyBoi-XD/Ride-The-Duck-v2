@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "ride_the_duck-v2"
+dynamic = ["version"]
+description = "The second version of the recreation of the drinking game 'Ride the Bus' recreated in Python using pygame for the user interface"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["game", "gambling", "pygame", "ride the bus", "casino"]
+authors = [
+  { name="Braeden Sy Tan" }
+]
+license = "GPL-3.0-or-later"
+dependencies = ["pygame>=2.6.0"]
+
+[project.urls]
+Homepage = "https://github.com/DuckyBoi-XD/Ride-The-Duck-v2"
+Issues = "https://github.com/DuckyBoi-XD/Ride-The-Duck-v2/issues"
+
+[project.scripts]
+RTD2 = "ridetheduck_v2_package.game:main"
+ridetheduck-v2 = "ridetheduck_v2_package.game:main"
+play-RTD2 = "ridetheduck_v2_package.game:main"
+play-ridetheduck-v2 = "ridetheduck_v2_package.game:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ridetheduck_v2_package = ["assets/**/*.png", "assets/**/*.ttf", "assets/**/*.ttf"]
+
+[tool.setuptools_scm]
+version_scheme = "release-branch-semver"
+local_scheme = "no-local-version"
+tag_regex = "^(?:v)?(?P<version>\\d+\\.\\d+\\.\\d+)$"
