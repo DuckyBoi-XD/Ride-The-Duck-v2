@@ -276,6 +276,7 @@ class game_variable: # Game variables
         self.winSFX = pygame.mixer.Sound(asset_path("SFX/winSFX.mp3"))
         self.gamestartSFX = pygame.mixer.Sound(asset_path("SFX/gamestartSFX.mp3"))
         self.quackSFX = pygame.mixer.Sound(asset_path("SFX/quackSFX.mp3"))
+        self.redoSFX = pygame.mixer.Sound(asset_path("SFX/redoSFX.mp3"))
 
         card_ranks = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
         self.spadesCards = tuple(asset_path(f"Carddeck/Spades/{rank}.png") for rank in card_ranks)
@@ -1021,6 +1022,7 @@ class game_functions():
                     if ((GV.chipData[(value[1])[0]])[(value[1])[1]])["override"]:
                         GV.chipChangeHistory.remove(value)
                 if GV.chipChangeHistory:
+                    GV.redoSFX.play(0)
 
                     GV.chipChangeHistory.reverse()
 
