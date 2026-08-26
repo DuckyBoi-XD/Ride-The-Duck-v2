@@ -1358,17 +1358,7 @@ class game_functions():
             GV.hoverButtonCashOut = False
             GV.hoverButtonSquare = [False, False, False, False]
 
-            if GV.gameStart:
-                
-                cursorPosx, cursorPosy = pygame.mouse.get_pos()
-                if 400 <= cursorPosx <= 800 and 550 <= cursorPosy <= 620:
-                    GV.gameStartHover = [80, 80, 80]
-                    GV.gameStartVar = True
-                else:
-                    GV.gameStartHover = [20, 20, 20]
-                    GV.gameStartVar = False
-
-            elif GV.gameend and GV.round == 0:
+            if GV.gameend and GV.round == 0:
                 cursorPosx, cursorPosy = pygame.mouse.get_pos()
                 if 500 <= cursorPosx <= 700 and 515 <= cursorPosy <= 555:
                     GV.gameendHover = [80, 80, 80]
@@ -1406,7 +1396,23 @@ class game_functions():
                     else:
                         if (((GV.chipData[chipindex[0]]))[chipindex[1]])["outline"]:
                             (((GV.chipData[chipindex[0]]))[chipindex[1]])["outline"] = False
-                            
+
+    def starting_function(self):
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if GV.gameStart:
+                    if GV.gameStartVar:
+                        GV.gameStart = False
+                        GV.gamestartSFX.play(0)
+
+        if GV.gameStart:         
+            cursorPosx, cursorPosy = pygame.mouse.get_pos()
+            if 400 <= cursorPosx <= 800 and 550 <= cursorPosy <= 620:
+                GV.gameStartHover = [80, 80, 80]
+                GV.gameStartVar = True
+            else:
+                GV.gameStartHover = [20, 20, 20]
+                GV.gameStartVar = False
 
     def betting_areas(self):
         for chip_index in reversed(GV.chipDisplayPriority):
@@ -1686,14 +1692,19 @@ class pygame_function:
             GV._running = False 
         while(GV._running):
             self.FPS.tick(self.fps)
-            GF.player_function()
+            if GV.gameStart:
+                GF.starting_function()
+            else:
+                GF.player_function()
             GF.betting_areas()
+
             if GV.game:
                 GF.ride_the_duck_function()
             if sum(CHIPS) == 0 and GV.round == 0:
                 GV.gameend = True
             else:
                 GV.gameend = False
+
             self.on_render()
             pygame.display.flip()
         self.on_cleanup()
