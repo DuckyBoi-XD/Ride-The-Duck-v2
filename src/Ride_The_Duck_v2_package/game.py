@@ -659,7 +659,7 @@ class game_objects:
                         pygame.draw.polygon(GV.display, GV.white_colour, i)
 
                 # sets outline colour
-                if int(GV.chipValues[chipIndexSelection[0]]) > GV.chipExchangeValue2 or int(GV.chipValues[chipIndexSelection[0]]) > GV.chipExchangeValue2-GV.chipExchangeValue1 or int(GV.chipValues[chipIndexSelection[0]]) == int(GV.chipValues[GV.chipExchange[0][0]]):
+                if int(GV.chipValues[chipIndexSelection[0]]) > GV.chipExchangeValue2 or int(GV.chipValues[chipIndexSelection[0]]) > GV.chipExchangeValue2-GV.chipExchangeValue1 or (int(GV.chipValues[chipIndexSelection[0]]) == int(GV.chipValues[GV.chipExchange[0][0]]) and len(GV.chipExchange) == 1):
                     chipOutlineColour = GV.bright_red
                 elif GV.exchangeChipPos[chipIndexSelection[0]] == GV.chipExchangeHighlight:
                     chipOutlineColour = GV.bright_green
