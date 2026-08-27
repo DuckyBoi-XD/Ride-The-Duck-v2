@@ -320,7 +320,6 @@ class game_variable: # Game variables
         self.cardDeck = self.tempcardDeck
         random.shuffle(self.cardDeck)
         random.shuffle(self.cardDeck)
-        print(self.cardDeck)
 
         self.Values = (2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11)
 
@@ -1552,6 +1551,7 @@ class game_functions():
                     GV.roundState[3] = 3
             
             if GV.gamefail:
+                GV.shuffle_count += 1
 
                 STATS["loses"] += 1
                 STATS["rounds played"] += 1
@@ -1596,6 +1596,7 @@ class game_functions():
             GV.cardHandValue.clear()
 
         elif (GV.gamepayout or GV.gamepushback) and GV.round != 0:
+            GV.shuffle_count += 1
             STATS["rounds played"] += 1
             if GV.gamepushback:
                 STATS["push back"] += 1
@@ -1750,6 +1751,10 @@ class pygame_function:
                 GV.gameend = True
             else:
                 GV.gameend = False
+            if GV.shuffle_count == 13:
+                random.shuffle(GV.cardDeck)
+                random.shuffle(GV.cardDeck)
+                GV.shuffle_count = 0
 
             self.on_render()
             pygame.display.flip()
