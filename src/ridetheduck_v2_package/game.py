@@ -103,6 +103,8 @@ def save_game(chip_info = None, stats = None):
 
 CHIPS, STATS = load_game()
 
+STATS["20x wins"] = 10000
+
 def cosd(x):
     return math.cos(math.radians(x))
 def sind(x):
@@ -268,18 +270,21 @@ class game_variable: # Game variables
         self.duckPositions = []
 
         for _ in range(0, STATS["20x wins"]):
-            x_calculation = 0
-            y_calculation = 0
-            y_value = 0
+            if _ == 1000:
+                break
+            else:
+                x_calculation = 0
+                y_calculation = 0
+                y_value = 0
 
-            x_value = random.randint(50, 1150)
-            x_calculation = 600 - x_value
-            x_calculation = abs(x_calculation)
+                x_value = random.randint(20, 1180)
+                x_calculation = 600 - x_value
+                x_calculation = abs(x_calculation)
 
-            y_calculation = math.sqrt((1260**2) - (x_calculation**2))
-            y_value = y_calculation - 980
+                y_calculation = math.sqrt((1260**2) - (x_calculation**2))
+                y_value = y_calculation - 980
 
-            self.duckPositions.append((x_value, y_value))
+                self.duckPositions.append((x_value, y_value))
 
         self.cardSFX = pygame.mixer.Sound(asset_path("SFX/cardSFX.mp3"))
         self.chipdownSFX = pygame.mixer.Sound(asset_path("SFX/chipdownSFX.mp3"))
@@ -299,7 +304,7 @@ class game_variable: # Game variables
         self.diamondsCards = tuple(asset_path(f"Carddeck/Diamonds/{rank}.png") for rank in card_ranks)
         self.clubsCards = tuple(asset_path(f"Carddeck/Clubs/{rank}.png") for rank in card_ranks)
 
-        self.duckImage = asset_path("images/rubberDuck.png")
+        self.duckImage = pygame.transform.scale(pygame.image.load(asset_path("images/rubberDuck.png")).convert_alpha(), (50.07142857143, 40.07142857143))
         
         self.CardFiles = (self.spadesCards, self.heartsCards, self.diamondsCards, self.clubsCards)
         
@@ -851,9 +856,8 @@ class game_objects:
         pygame.draw.rect(GV.display, GV.highlight_yellow, (375, 350, 450, 150), 3)
 
         for position in GV.duckPositions:
-            duck = pygame.transform.smoothscale(pygame.image.load(GV.duckImage), (50.07142857143, 40.07142857143)).convert_alpha()
-            rect = duck.get_rect(center=(position))
-            GV.display.blit(duck, rect)
+            rect = GV.duckImage.get_rect(center=position)
+            GV.display.blit(GV.duckImage, rect)
     def card_object(self):
         for index, card in enumerate(GV.gameHand):
 
@@ -1603,18 +1607,21 @@ class game_functions():
                 if GV.gamemultiplier == 20:
                     GV.quackSFX.play(0, 1500)
 
-                    x_calculation = 0
-                    y_calculation = 0
-                    y_value = 0
+                    if len(GV.duckPositions) == 1000:
+                        pass
+                    else:
+                        x_calculation = 0
+                        y_calculation = 0
+                        y_value = 0
 
-                    x_value = random.randint(50, 1150)
-                    x_calculation = 600 - x_value
-                    x_calculation = abs(x_calculation)
+                        x_value = random.randint(20, 1180)
+                        x_calculation = 600 - x_value
+                        x_calculation = abs(x_calculation)
 
-                    y_calculation = math.sqrt((1260**2) - (x_calculation**2))
-                    y_value = y_calculation - 980
+                        y_calculation = math.sqrt((1260**2) - (x_calculation**2))
+                        y_value = y_calculation - 980
 
-                    GV.duckPositions.append((x_value, y_value))
+                        GV.duckPositions.append((x_value, y_value))
 
                 GV.winSFX.play(0)
                 GV.chipsSFX.play(0)
