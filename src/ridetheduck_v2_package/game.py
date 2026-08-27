@@ -103,8 +103,6 @@ def save_game(chip_info = None, stats = None):
 
 CHIPS, STATS = load_game()
 
-STATS["20x wins"] = 10000
-
 def cosd(x):
     return math.cos(math.radians(x))
 def sind(x):
@@ -1043,7 +1041,6 @@ class game_functions():
 
             if event.type == pygame.KEYDOWN and event.unicode == "z" and GV.chipChangeHistory and GV.CMDhold:
                 for value in GV.chipChangeHistory.copy():
-                    print([(value[1])[0]], [(value[1])[1]])
                     if ((GV.chipData[(value[1])[0]])[(value[1])[1]])["override"]:
                         GV.chipChangeHistory.remove(value)
                 if GV.chipChangeHistory:
@@ -1057,7 +1054,6 @@ class game_functions():
                     (GV.chipData[chipIndex[0]])[chipIndex[1]]["position"] = chipPOS
                     GV.chipDisplayPriority.remove(chipIndex)
 
-                    print((GV.chipData[chipIndex[0]])[chipIndex[1]])
                     GV.chipDisplayPriority.insert(((GV.chipData[chipIndex[0]])[chipIndex[1]])["redo priority"], chipIndex)
                     GV.chipChangeHistory.pop(0)
 
