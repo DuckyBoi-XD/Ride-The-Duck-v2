@@ -1547,6 +1547,7 @@ class game_functions():
                     GV.roundState[3] = 3
             
             if GV.gamefail:
+                GV.chipChangeHistory.clear()
                 GV.shuffle_count += 1
 
                 STATS["loses"] += 1
@@ -1592,6 +1593,7 @@ class game_functions():
             GV.cardHandValue.clear()
 
         elif (GV.gamepayout or GV.gamepushback) and GV.round != 0:
+            GV.chipChangeHistory.clear()
             GV.shuffle_count += 1
             STATS["rounds played"] += 1
             if GV.gamepushback:
