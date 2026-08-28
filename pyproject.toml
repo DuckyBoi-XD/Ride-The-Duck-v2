@@ -20,9 +20,7 @@ Issues = "https://github.com/DuckyBoi-XD/Ride-The-Duck-v2/issues"
 
 [project.scripts]
 RTD2 = "ridetheduck_v2_package.game:main"
-ridetheduck-v2 = "ridetheduck_v2_package.game:main"
-play-RTD2 = "ridetheduck_v2_package.game:main"
-play-ridetheduck-v2 = "ridetheduck_v2_package.game:main"
+ride-the-duck-v2 = "ridetheduck_v2_package.game:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
