@@ -1236,12 +1236,12 @@ class game_functions():
                             break
                     if GV.mousePosChange == True:
                         break
-                    CursorPos_CirclePosx = cursorPosx - 305
+                    CursorPos_CirclePosx = cursorPosx - 280
                     CursorPos_CirclePosy = cursorPosy - 105
 
                     CursorPos_CirclePos = CursorPos_CirclePosx**2 + CursorPos_CirclePosy**2
 
-                    if CursorPos_CirclePos <= GV.chipRadius**2 and GV.chipExchangeValue1 == GV.chipExchangeValue2:
+                    if CursorPos_CirclePos <= 30**2 and GV.chipExchangeValue1 == GV.chipExchangeValue2:
 
                         GV.chipsSFX.play(0)
                         GV.chipChangeHistory.clear()
