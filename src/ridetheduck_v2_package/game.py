@@ -264,6 +264,8 @@ class game_variable: # Game variables
         self.shortcut = [False, False] # exchange betting
         self.CMDhold = False
 
+        self.gamecount = 0
+
         self.chipChangeHistory = []
         self.duckPositions = []
 
@@ -1745,9 +1747,15 @@ class pygame_function:
 
             if GV.game:
                 GF.ride_the_duck_function()
+
+            
             if sum(CHIPS) == 0 and GV.round == 0:
-                GV.gameend = True
+                if GV.gamecount == 2:
+                    GV.gameend = True
+                else:
+                    GV.gamecount += 1
             else:
+                GV.gamecount = 0
                 GV.gameend = False
             if GV.shuffle_count == 13:
                 random.shuffle(GV.cardDeck)
