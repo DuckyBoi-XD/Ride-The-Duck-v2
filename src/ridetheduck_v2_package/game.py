@@ -1054,7 +1054,8 @@ class game_functions():
                 elif event.unicode == 'x':
                     GV.shortcut[1] = False
 
-            if event.type == pygame.KEYDOWN and ((GV.platformChange != "Linux" and event.unicode == "z") or (GV.platformChange == "Linux" and event.unicode == "y")) and GV.chipChangeHistory and GV.CMDhold:
+            if event.type == pygame.KEYDOWN and GV.chipChangeHistory and ((GV.CMDhold and ((GV.platformChange == "Darwin" and event.unicode == "z") or (GV.platformChange == "Linux" and event.unicode == "y"))) or event.unicode == "\x1a"):
+                print("wok")
                 for value in GV.chipChangeHistory.copy():
                     if ((GV.chipData[(value[1])[0]])[(value[1])[1]])["override"]:
                         GV.chipChangeHistory.remove(value)
@@ -1076,11 +1077,10 @@ class game_functions():
                 
             if GV.platformChange == "Darwin":
                 if event.type == pygame.KEYDOWN and event.scancode == 227:
-                    print("work")
                     GV.CMDhold = True
                 elif event.type == pygame.KEYUP and event.scancode == 227:
                     GV.CMDhold = False
-            elif GV.platformChange is "Windows" or GV.platformChange == "Linux":
+            elif GV.platformChange == "Linux":
                 if event.type == pygame.KEYDOWN and event.scancode == 224:
                     GV.CMDhold = True
                 elif event.type == pygame.KEYUP and event.scancode == 224:
