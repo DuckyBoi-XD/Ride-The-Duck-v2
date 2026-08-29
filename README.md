@@ -23,7 +23,7 @@ The second version of my recreation of the drinking game and Schedule 1 gambling
 
 Requirements:
 
-- MacOS or Linux device (MacOS is confirmed working with terminal)
+- Any Operating System (MacOS and Windows are thoroughly tested)
 - Python 3.9 or later (the latest to be safe)
 - Pip 22 or later (the latest to be safe)
 - Pygame 2.6.0 or later (should be installed when installing the package from Pypi)
@@ -56,7 +56,7 @@ After running the entry command (seen above), you'll be presented with the title
 
 When in the main part of the game, you can do 3 things: exchange your chips for different denominations (shortcut - 'x' + left click the chip), use your chips to bet (shortcut - 'z' + left click the chip), move the chip (for fun).
 
-When exchanging, this is done by moving the chip into the top right section of the table or holding down 'x' and selecting the chip (chips are indicated that they are in the space if they have a green outline). Once moving all desired chips to the exchange area, a space on the top left will appear, showing all the chip denominations, the selected value, the value of all the chips you placed and a circular button. You'll need to press on the chips you want to exchange your chips for which has to be equal to each other. Once equal, the circular button will turn green and pressing it will exchange your chips and save the game's data.
+When exchanging, this is done by moving the chip into the top right section of the table or holding down 'x' and selecting the chip (chips are indicated that they are in the space if they have a green outline). Once moving all desired chips to the exchange area, a space on the top left will appear, showing all the chip denominations, the selected value, the value of all the chips you placed and a circular button. You'll need to press on the chips you want to exchange your chips for which has to be equal to each other. You can also hold shift and slect a chip, which, if applicable, will fill the rest of the orignal chip value with the chip selected. Once equal, the circular button will turn green and pressing it will exchange your chips and save the game's data.
 
 When betting, this is done by moving all the chips you want to bet into the center box between the 2 buttons labeled and coloured black and red. Once all desired chips are in the the betting space (chips are indicated that they are in the space if they have a green outline), pressing either the 'black' or 'red' will start the game, the button you press indicating/is your guess on whether the next card drawn would 'black' or 'red'. There are 4 stages of the game, indicated by the text on the table labeled as: 2x, 3x, 4x, 20x which also represents the multiplier you get for beating the stage. Once you beat at least once stage, you are given the ability to 'cash out' and your original bet will be multiplied by the stage's multiplier that you're on.
 
