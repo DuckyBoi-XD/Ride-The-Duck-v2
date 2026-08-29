@@ -1604,35 +1604,35 @@ class game_functions():
                 STATS["loses"] += 1
                 STATS["rounds played"] += 1
                 GV.loseSFX.play(0)
+                for index, _ in enumerate(GV.chipData):
+                    GV.chipData[index].clear()
+
                 for chip in GV.chipBet:
                     CHIPS[chip[0]] -= 1
 
-                    for index, _ in enumerate(GV.chipData):
-                        GV.chipData[index].clear()
+                for index, i in enumerate(CHIPS):
+                    if i != 0:
+                        GV.offset = 5
+                        GV.offsetreal = 0
+                        GV.sideOffset = 0
+                        for _ in range(0, i):
+                            GV.sideOffset = int(str(GV.offset/350)[0]) * 5
+                            GV.offset = GV.offset - int(str(GV.offset/350)[0]) * 350
+                            GV.chipData[index].append({"value": GV.chipValues[index],
+                                                            "colour": GV.chipValueColours[index],
+                                                            "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
+                                                            "override": False,
+                                                            "outline": False,
+                                                            "previous position": [],
+                                                            "redo priority": None,
+                                                        })
+                            GV.offset += 10
+                            GV.offsetreal += 10
 
-                    for index, i in enumerate(CHIPS):
-                        if i != 0:
-                            GV.offset = 5
-                            GV.offsetreal = 0
-                            GV.sideOffset = 0
-                            for _ in range(0, i):
-                                GV.sideOffset = int(str(GV.offset/350)[0]) * 5
-                                GV.offset = GV.offset - int(str(GV.offset/350)[0]) * 350
-                                GV.chipData[index].append({"value": GV.chipValues[index],
-                                                                "colour": GV.chipValueColours[index],
-                                                                "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
-                                                                "override": False,
-                                                                "outline": False,
-                                                                "previous position": [],
-                                                                "redo priority": None,
-                                                            })
-                                GV.offset += 10
-                                GV.offsetreal += 10
-
-                    GV.chipDisplayPriority.clear()
-                    for indexa, lista in enumerate(GV.chipData):
-                        for indexb, _ in enumerate(lista):
-                            GV.chipDisplayPriority.append((indexa, indexb))
+                GV.chipDisplayPriority.clear()
+                for indexa, lista in enumerate(GV.chipData):
+                    for indexb, _ in enumerate(lista):
+                        GV.chipDisplayPriority.append((indexa, indexb))
 
                 GV.round = 0
                 GV.chipBet.clear()
@@ -1695,47 +1695,46 @@ class game_functions():
 
                 for index, value in enumerate(GV.chipBetPhyiscalValue): # tries to simplify the payout
 
-                    if value != 0 and index != 7 and (GV.gamemultiplier == 20 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+3]) == 0:
+                    if value != 0 and index >= 7 and (GV.gamemultiplier == 20 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+3]) == 0:
                         GV.chipBetValues[index] = 0
                         GV.chipBetValues[index+3] += int(value/int(GV.chipValues[index+3]))
 
-                    elif value != 0 and index != 8 and (GV.gamemultiplier >= 4 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+2]) == 0:
+                    elif value != 0 and index >= 8 and (GV.gamemultiplier >= 4 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+2]) == 0:
                         GV.chipBetValues[index] = 0
                         GV.chipBetValues[index+2] += int(value/int(GV.chipValues[index+2]))
 
-                    elif value != 0 and index != 9 and (GV.gamemultiplier >= 3 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+1]) == 0:
+                    elif value != 0 and index >= 9 and (GV.gamemultiplier >= 3 or GV.chipBetValues[index] >= 3) and value % int(GV.chipValues[index+1]) == 0:
                         GV.chipBetValues[index] = 0
                         GV.chipBetValues[index+1] += int(value/int(GV.chipValues[index+1]))
 
+            for index, _ in enumerate(GV.chipData):
+                GV.chipData[index].clear()
             for parent_index, chips in enumerate(GV.chipBetValues):
                 if GV.gamepayout:
                     CHIPS[parent_index] += chips
 
-                for index, _ in enumerate(GV.chipData):
-                    GV.chipData[index].clear()
-
-                for index, i in enumerate(CHIPS):
-                    if i != 0:
-                        GV.offset = 5
-                        GV.offsetreal = 0
-                        GV.sideOffset = 0
-                        for _ in range(0, i):
-                            GV.sideOffset = int(str(GV.offset/350)[0]) * 5
-                            GV.offset = GV.offset - int(str(GV.offset/350)[0]) * 350
-                            GV.chipData[index].append({"value": GV.chipValues[index],
-                                                            "colour": GV.chipValueColours[index],
-                                                            "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
-                                                            "override": False,
-                                                            "outline": False,
-                                                            "previous position": [],
-                                                            "redo priority": None,
-                                                        })
-                            GV.offset += 10
-                            GV.offsetreal += 10
-                GV.chipDisplayPriority.clear()
-                for indexa, lista in enumerate(GV.chipData):
-                    for indexb, _ in enumerate(lista):
-                        GV.chipDisplayPriority.append((indexa, indexb))
+            for index, i in enumerate(CHIPS):
+                if i != 0:
+                    GV.offset = 5
+                    GV.offsetreal = 0
+                    GV.sideOffset = 0
+                    for _ in range(0, i):
+                        GV.sideOffset = int(str(GV.offset/350)[0]) * 5
+                        GV.offset = GV.offset - int(str(GV.offset/350)[0]) * 350
+                        GV.chipData[index].append({"value": GV.chipValues[index],
+                                                        "colour": GV.chipValueColours[index],
+                                                        "position": [((GV.chipStartPositions)[GV.chipValues[index]])[0] - GV.sideOffset, ((GV.chipStartPositions[GV.chipValues[index]])[1] - GV.offset)],
+                                                        "override": False,
+                                                        "outline": False,
+                                                        "previous position": [],
+                                                        "redo priority": None,
+                                                    })
+                        GV.offset += 10
+                        GV.offsetreal += 10
+            GV.chipDisplayPriority.clear()
+            for indexa, lista in enumerate(GV.chipData):
+                for indexb, _ in enumerate(lista):
+                    GV.chipDisplayPriority.append((indexa, indexb))
 
             totalchipammount = 0
             for index, value in enumerate(CHIPS):
@@ -1807,6 +1806,7 @@ class pygame_function:
                 GV.gamecount = 0
                 GV.gameend = False
             if GV.shuffle_count == 13:
+                GV.cardDeck = GV.tempcardDeck
                 random.shuffle(GV.cardDeck)
                 random.shuffle(GV.cardDeck)
                 GV.shuffle_count = 0
