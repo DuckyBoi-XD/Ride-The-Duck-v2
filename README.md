@@ -44,8 +44,6 @@ Requirements:
 
     - `rtd2`
     - `ridetheduck-v2`
-    - `play-rtd2`
-    - `play-ridetheduck-v2`
     (Capitalization doesn't matter)
 
 4. Enjoy and good luck gambling
