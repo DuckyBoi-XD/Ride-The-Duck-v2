@@ -15,64 +15,6 @@ The second version of my recreation of the drinking game and Schedule 1 gambling
 - Statistics: Statistics relevant to the game is tracked and displayed when booting up the game and running out of chips (resetting game)
 - Table Writing: Feature mathematically symmetrical table text and lines
 
-## Gifs
-
-### 20x Game Example
-
-![20x Game Example](./media/gifs/RTD-2%2020x.gif)
-
-### Manual Game Example
-
-![Manual Game Example](./media/gifs/RTD-2%20game%20manual.gif)
-
-### Exchange Example
-
-![Game Exchange](./media/gifs/RTD-2%20exchange.gif)
-
-### Quick Exchange Example
-
-![Quick Exchange](./media/gifs/RTD-2%20chip%20quick%20exchange%202.gif)
-
-### Redo Example 1
-
-![Redo Example 1](./media/gifs/RTD-2%20Chip%20redo%201.gif)
-
-### Redo Example 2
-
-![Redo Example 2](./media/gifs/RTD-2%20Chip%20redo%202.gif)
-
-### Redo Example 3
-
-![Redo Example 3](./media/gifs/RTD-2%20Chip%20redo%203.gif)
-
-## Videos
-
-### Game Compatibility
-
-https://github.com/user-attachments/assets/4659bfd3-8e0f-4473-b811-f649f3c233bd
-
-### Game Example Time Lapse
-
-https://github.com/user-attachments/assets/128b3ffe-03c2-40ab-be38-544b45f91c29
-
-## Images
-
-### 20x Game Example Image
-
-![Game time lapse](./media/images/20x%20game.png)
-
-### Exchange Example Image
-
-![Game time lapse](./media/images/Exchange%20game.png)
-
-### Fail Game Example Image
-
-![Game time lapse](./media/images/Fail%20game.png)
-
-### Restart Game Example Image
-
-![Game time lapse](./media/images/Restart%20game.png)
-
 ## How To Install
 
 Requirements:
@@ -116,4 +58,64 @@ The following stages are ordered by the following: 2x - Black or White, 3x - Hig
 
 The rules of the game can be seen [here](https://www.wikihow.com/Play-Ride-the-Bus) (note that it's only the first part and that the multiplier and outcome are different)
 
-There are 7 stats: Rounds Played, Rounds Won, Specific Multiplier Wins, Rounds Lost, Rounds Pushed Back, Money Earnt, Peak Money. 
+There are 7 stats: Rounds Played, Rounds Won, Specific Multiplier Wins, Rounds Lost, Rounds Pushed Back, Money Earnt, Peak Money.
+
+## Game Examples
+
+### Gifs
+
+#### 20x Game Example
+
+![20x Game Example](./media/gifs/RTD-2%2020x.gif)
+
+#### Manual Game Example
+
+![Manual Game Example](./media/gifs/RTD-2%20game%20manual.gif)
+
+#### Exchange Example
+
+![Game Exchange](./media/gifs/RTD-2%20exchange.gif)
+
+#### Quick Exchange Example
+
+![Quick Exchange](./media/gifs/RTD-2%20chip%20quick%20exchange%202.gif)
+
+#### Redo Example 1
+
+![Redo Example 1](./media/gifs/RTD-2%20Chip%20redo%201.gif)
+
+#### Redo Example 2
+
+![Redo Example 2](./media/gifs/RTD-2%20Chip%20redo%202.gif)
+
+#### Redo Example 3
+
+![Redo Example 3](./media/gifs/RTD-2%20Chip%20redo%203.gif)
+
+### Videos
+
+#### Game Compatibility
+
+https://github.com/user-attachments/assets/4659bfd3-8e0f-4473-b811-f649f3c233bd
+
+#### Game Example Time Lapse
+
+https://github.com/user-attachments/assets/128b3ffe-03c2-40ab-be38-544b45f91c29
+
+### Images
+
+#### 20x Game Example Image
+
+![Game time lapse](./media/images/20x%20game.png)
+
+#### Exchange Example Image
+
+![Game time lapse](./media/images/Exchange%20game.png)
+
+#### Fail Game Example Image
+
+![Game time lapse](./media/images/Fail%20game.png)
+
+#### Restart Game Example Image
+
+![Game time lapse](./media/images/Restart%20game.png)
