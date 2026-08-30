@@ -47,13 +47,13 @@ The second version of my recreation of the drinking game and Schedule 1 gambling
 
 ## Videos
 
-### Game Compatability
+### Game Compatibility
 
-![Game Compatibility](./media/videos/RTD-2%20Compatibility.mp4)
+https://github.com/user-attachments/assets/4659bfd3-8e0f-4473-b811-f649f3c233bd
 
-### Game Example TIme Lapse
+### Game Example Time Lapse
 
-![Game time lapse](./media/videos/RTD-2%20chip%20game%20fast.mp4)
+https://github.com/user-attachments/assets/128b3ffe-03c2-40ab-be38-544b45f91c29
 
 ## Images
 
