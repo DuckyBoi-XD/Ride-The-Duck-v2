@@ -15,9 +15,63 @@ The second version of my recreation of the drinking game and Schedule 1 gambling
 - Statistics: Statistics relevant to the game is tracked and displayed when booting up the game and running out of chips (resetting game)
 - Table Writing: Feature mathematically symmetrical table text and lines
 
+## Gifs
+
+### 20x Game Example
+
+![20x Game Example](./media/gifs/RTD-2%2020x.gif)
+
+### Manual Game Example
+
+![Manual Game Example](./media/gifs/RTD-2%20game%20manual.gif)
+
+### Exchange Example
+
+![Game Exchange](./media/gifs/RTD-2%20exchange.gif)
+
+### Quick Exchange Example
+
+![Quick Exchange](./media/gifs/RTD-2%20chip%20quick%20exchange%202.gif)
+
+### Redo Example 1
+
+![Redo Example 1](./media/gifs/RTD-2%20Chip%20redo%201.gif)
+
+### Redo Example 2
+
+![Redo Example 2](./media/gifs/RTD-2%20Chip%20redo%202.gif)
+
+### Redo Example 3
+
+![Redo Example 3](./media/gifs/RTD-2%20Chip%20redo%203.gif)
+
 ## Videos
 
+### Game Compatability
+
+![Game Compatibility](./media/videos/RTD-2%20Compatibility.mp4)
+
+### Game Example TIme Lapse
+
+![Game time lapse](./media/videos/RTD-2%20chip%20game%20fast.mp4)
+
 ## Images
+
+### 20x Game Example Image
+
+![Game time lapse](./media/images/20x%20game.png)
+
+### Exchange Example Image
+
+![Game time lapse](./media/images/Exchange%20game.png)
+
+### Fail Game Example Image
+
+![Game time lapse](./media/images/Fail%20game.png)
+
+### Restart Game Example Image
+
+![Game time lapse](./media/images/Restart%20game.png)
 
 ## How To Install
 
